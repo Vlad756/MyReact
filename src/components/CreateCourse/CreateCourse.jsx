@@ -34,19 +34,12 @@ export default function CreateCourse(props) {
 	}
 
 	function handleCreateAuthor(event) {
-		event.preventDefault();
 		const newAuthors = [...authors, { id: uuidv4(), name: authorInput }];
 		setAuthors(newAuthors);
 	}
 
 	function handleCreateCourse(event) {
-		event.preventDefault();
-		if (
-			title === '' ||
-			description === '' ||
-			duration <= 0 ||
-			courseAuthors.length <= 0
-		) {
+		if (isFormValid()) {
 			window.alert('Please, fill in all fields');
 			return;
 		}
@@ -62,12 +55,19 @@ export default function CreateCourse(props) {
 			},
 		];
 		setCourses(newCourses);
-		console.log(courses);
 		props.setSwitcher(false);
 	}
 
+	function isFormValid() {
+		return (
+			title === '' ||
+			description === '' ||
+			duration <= 0 ||
+			courseAuthors.length <= 0
+		);
+	}
+
 	function handleAddAuthor(author, event) {
-		event.preventDefault();
 		const newCourseAuthors = [...courseAuthors, author];
 		setCourseAuthors(newCourseAuthors);
 		const newAuthors = authors.filter((x) => x.id !== author.id);
@@ -75,7 +75,6 @@ export default function CreateCourse(props) {
 	}
 
 	function handleDeleteAuthor(author, event) {
-		event.preventDefault();
 		const newAuthors = [...authors, author];
 		setAuthors(newAuthors);
 		const newCourseAuthors = courseAuthors.filter((x) => x.id !== author.id);
@@ -90,7 +89,6 @@ export default function CreateCourse(props) {
 					<Form.Field>
 						<Input
 							onChange={(e) => setTitle(e.target.value)}
-							name='courseNameInput'
 							type='text'
 							placeholder={COURSE_NAME_INPUT_TEXT}
 						/>
@@ -107,7 +105,6 @@ export default function CreateCourse(props) {
 			<Form.Field>
 				<textarea
 					onChange={(e) => setDescription(e.target.value)}
-					name='descriptionTextArea'
 					placeholder={DESCRIPTION_INPUT_PLACEHOLDER}
 				/>
 			</Form.Field>
@@ -116,7 +113,6 @@ export default function CreateCourse(props) {
 					<h3>Add author</h3>
 					<p>Author name</p>
 					<Input
-						name='authorNameInput'
 						placeholder={AUTOR_NAME_INPUT_PLACEHOLDER}
 						onChange={(e) => setAuthorInput(e.target.value)}
 					/>
@@ -128,7 +124,6 @@ export default function CreateCourse(props) {
 					<p>Duration</p>
 					<Input
 						type='number'
-						name='durationInput'
 						placeholder={DURATION_INPUT_PLACEHOLDER}
 						onChange={(e) => setDuration(e.target.value)}
 					/>

@@ -21,7 +21,7 @@
     "eject": "react-scripts eject",
     "test:nowatch": "react-scripts test --watchAll=false",
     "prepare": "husky install",
-    "prepublish": "eslint --fix",
+    "prepublish": "eslint --fix --ext .js --ext .jsx src",
     "postinstall": "semantic-ui-css-patch"
   },
   "eslintConfig": {

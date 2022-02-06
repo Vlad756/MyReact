@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import CourseCard from './components/CourseCard/CourseCard';
-import { mockedCoursesList, mockedAuthorsList } from '../../constants';
+import {
+	mockedCoursesList,
+	mockedAuthorsList as authors,
+} from '../../constants';
 import { Grid } from 'semantic-ui-react';
 import Button from '../../common/Button/Button';
 import SearchBar from './components/SearchBar/SearchBar';
 import { CREATE_COURSE_BUTTON_TEXT } from '../../constants';
 
 export default function Courses(props) {
-	const authors = mockedAuthorsList;
 	const [courses, setCourses] = useState(mockedCoursesList);
 	const [searchfield, setSearchfield] = useState('');
 
 	function getAuthorsNames(arr) {
-		let str = '';
-		arr.forEach((id) => {
-			const name = authors.find((a) => a.id === id)?.name;
-			if (name) {
-				str += name + ', ';
-			}
-		});
-		return str.substring(0, str.length - 2);
+		return authors
+			.reduce((prev, current) => {
+				if (arr.includes(current.id)) {
+					return [...prev, current.name];
+				}
+				return [...prev];
+			}, [])
+			.join(', ');
 	}
 
 	function onSearchChange(event) {
 		setSearchfield(event.target.value);
-		filteredCourses();
 	}
 
 	function filteredCourses() {
@@ -44,7 +45,10 @@ export default function Courses(props) {
 		<>
 			<Grid style={{ marginBottom: 2 }}>
 				<Grid.Column width={5} style={{ marginLeft: '10%' }}>
-					<SearchBar searchChange={onSearchChange} />
+					<SearchBar
+						searchChange={onSearchChange}
+						onSearchButtonClick={filteredCourses}
+					/>
 				</Grid.Column>
 				<Grid.Column width={3} floated='right' style={{ marginRight: '10%' }}>
 					<Button
@@ -55,7 +59,7 @@ export default function Courses(props) {
 			</Grid>
 			{courses.map((x, i) => (
 				<CourseCard
-					Key={i}
+					key={i}
 					title={x.title}
 					description={x.description}
 					authors={getAuthorsNames(x.authors)}

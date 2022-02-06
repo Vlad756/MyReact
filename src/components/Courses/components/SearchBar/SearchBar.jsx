@@ -14,7 +14,6 @@ export default function SearchBar(props) {
 				<Grid.Column width={12}>
 					<Input
 						onChange={props.searchChange}
-						name='search'
 						type='text'
 						placeholder={SEARCH_INPUT_PLACEHOLDER}
 					/>
@@ -23,7 +22,7 @@ export default function SearchBar(props) {
 					<Button
 						style={{ marginTop: '5px' }}
 						content={SEARCH_BUTTON_TEXT}
-						onClick={props.searchChange}
+						onClick={props.onSearchButtonClick}
 					/>
 				</Grid.Column>
 			</Grid>

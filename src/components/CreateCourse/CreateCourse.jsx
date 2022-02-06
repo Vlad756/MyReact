@@ -82,7 +82,7 @@ export const CreateCourse = ({ setSwitcher }) => {
 	}
 
 	return (
-		<Form style={{ margin: '5%' }}>
+		<Form className='createCourseForm'>
 			<p>Title</p>
 			<Grid>
 				<Grid.Column width={10} floated='left'>
@@ -108,7 +108,7 @@ export const CreateCourse = ({ setSwitcher }) => {
 					placeholder={DESCRIPTION_INPUT_PLACEHOLDER}
 				/>
 			</Form.Field>
-			<Grid columns={2} relaxed='very' style={{ marginTop: '10px' }}>
+			<Grid columns={2} relaxed='very' className='createCourseInfo'>
 				<Grid.Column>
 					<h3>Add author</h3>
 					<p>Author name</p>

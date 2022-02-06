@@ -47,14 +47,18 @@ export const Courses = ({ setSwitcher }) => {
 
 	return (
 		<>
-			<Grid style={{ marginBottom: 2 }}>
-				<Grid.Column width={5} style={{ marginLeft: '10%' }}>
+			<Grid className='coursesSearchGrid'>
+				<Grid.Column width={5} className='coursesSearchBarColumn'>
 					<SearchBar
 						searchChange={onSearchChange}
 						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>
-				<Grid.Column width={3} floated='right' style={{ marginRight: '10%' }}>
+				<Grid.Column
+					width={3}
+					floated='right'
+					className='addCourseButtonColumn'
+				>
 					<Button
 						content={ADD_NEW_COURSE_BUTTON_TEXT}
 						onClick={() => setSwitcher(true)}

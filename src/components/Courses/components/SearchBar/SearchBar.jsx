@@ -20,7 +20,7 @@ export const SearchBar = ({ searchChange, onSearchButtonClick }) => {
 				</Grid.Column>
 				<Grid.Column>
 					<Button
-						style={{ marginTop: '5px' }}
+						className='searchButton'
 						content={SEARCH_BUTTON_TEXT}
 						onClick={onSearchButtonClick}
 					/>

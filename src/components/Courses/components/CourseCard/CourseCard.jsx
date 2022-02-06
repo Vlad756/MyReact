@@ -23,7 +23,7 @@ export const CourseCard = ({
 	}
 
 	return (
-		<Segment style={{ width: '80%', margin: '0 auto', marginBottom: 10 }}>
+		<Segment className='courseCard'>
 			<Grid columns={2} relaxed='very'>
 				<Grid.Column>
 					<h2>{title}</h2>

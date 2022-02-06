@@ -1,9 +1,9 @@
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
-import Button from '../../common/Button/Button';
-import Logo from './components/Logo/Logo';
+import { Button } from '../../common/Button/Button';
+import { Logo } from './components/Logo/Logo';
 
-export default function Header() {
+export const Header = () => {
 	return (
 		<Menu>
 			<Menu.Item>
@@ -20,4 +20,4 @@ export default function Header() {
 			</Menu.Menu>
 		</Menu>
 	);
-}
+};

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import CourseCard from './components/CourseCard/CourseCard';
+import { CourseCard } from './components/CourseCard/CourseCard';
 import {
-	mockedCoursesList,
+	mockedCoursesList as courses,
 	mockedAuthorsList as authors,
 } from '../../constants';
 import { Grid } from 'semantic-ui-react';
-import Button from '../../common/Button/Button';
-import SearchBar from './components/SearchBar/SearchBar';
-import { CREATE_COURSE_BUTTON_TEXT } from '../../constants';
+import { Button } from '../../common/Button/Button';
+import { SearchBar } from './components/SearchBar/SearchBar';
+import { ADD_NEW_COURSE_BUTTON_TEXT } from '../../constants';
 
-export default function Courses(props) {
-	const [courses, setCourses] = useState(mockedCoursesList);
-	const [searchfield, setSearchfield] = useState('');
+export const Courses = ({ setSwitcher }) => {
+	const [searchField, setSearchField] = useState('');
+	const [filteredCourses, setFilteredCourses] = useState(courses);
 
 	function getAuthorsNames(arr) {
 		return authors
@@ -25,20 +25,24 @@ export default function Courses(props) {
 	}
 
 	function onSearchChange(event) {
-		setSearchfield(event.target.value);
+		setSearchField(event.target.value);
 	}
 
-	function filteredCourses() {
-		setCourses(mockedCoursesList);
-		if (searchfield !== '') {
-			const c = courses.filter((course) => {
+	function filterCourses(courses) {
+		if (searchField !== '') {
+			const filtered = courses.filter((course) => {
 				return (
-					course.title.toLowerCase().includes(searchfield.toLowerCase()) ||
-					course.id.toLowerCase().includes(searchfield.toLowerCase())
+					course.title.toLowerCase().includes(searchField.toLowerCase()) ||
+					course.id.toLowerCase().includes(searchField.toLowerCase())
 				);
 			});
-			setCourses(c);
+			return filtered;
 		}
+		return courses;
+	}
+
+	function handleOnSearchButtonClick() {
+		setFilteredCourses(filterCourses(courses));
 	}
 
 	return (
@@ -47,17 +51,17 @@ export default function Courses(props) {
 				<Grid.Column width={5} style={{ marginLeft: '10%' }}>
 					<SearchBar
 						searchChange={onSearchChange}
-						onSearchButtonClick={filteredCourses}
+						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>
 				<Grid.Column width={3} floated='right' style={{ marginRight: '10%' }}>
 					<Button
-						content={CREATE_COURSE_BUTTON_TEXT}
-						onClick={() => props.setSwitcher(true)}
+						content={ADD_NEW_COURSE_BUTTON_TEXT}
+						onClick={() => setSwitcher(true)}
 					/>
 				</Grid.Column>
 			</Grid>
-			{courses.map((x, i) => (
+			{filteredCourses.map((x, i) => (
 				<CourseCard
 					key={i}
 					title={x.title}
@@ -69,4 +73,4 @@ export default function Courses(props) {
 			))}
 		</>
 	);
-}
+};

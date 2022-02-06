@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Divider, Form, Grid } from 'semantic-ui-react';
-import Button from '../../common/Button/Button';
-import Input from '../../common/Input/Input';
+import { Button } from '../../common/Button/Button';
+import { Input } from '../../common/Input/Input';
 import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -15,7 +15,7 @@ import {
 	DELETE_AUTHOR_BUTTON_TEXT,
 } from '../../constants';
 
-export default function CreateCourse(props) {
+export const CreateCourse = ({ setSwitcher }) => {
 	const [authors, setAuthors] = useState(mockedAuthorsList);
 	const [courses, setCourses] = useState(mockedCoursesList);
 	const [authorInput, setAuthorInput] = useState();
@@ -55,7 +55,7 @@ export default function CreateCourse(props) {
 			},
 		];
 		setCourses(newCourses);
-		props.setSwitcher(false);
+		setSwitcher(false);
 	}
 
 	function isFormValid() {
@@ -163,4 +163,4 @@ export default function CreateCourse(props) {
 			<Divider vertical hidden />
 		</Form>
 	);
-}
+};

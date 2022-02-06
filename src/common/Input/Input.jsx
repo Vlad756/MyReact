@@ -1,11 +1,19 @@
 import React from 'react';
 import { Form } from 'semantic-ui-react';
 
-export default function Input(props) {
+export const Input = ({ label, value, onChange, name, type, placeholder }) => {
 	return (
 		<Form.Field>
-			<label>{props.label}</label>
-			<input {...props}></input>
+			<label>
+				{label}
+				<input
+					onChange={onChange}
+					name={name}
+					type={type}
+					placeholder={placeholder}
+					value={value}
+				></input>
+			</label>
 		</Form.Field>
 	);
-}
+};

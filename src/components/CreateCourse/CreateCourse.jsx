@@ -44,7 +44,7 @@ export default function CreateCourse(props) {
 		if (
 			title === '' ||
 			description === '' ||
-			duration === 0 ||
+			duration <= 0 ||
 			courseAuthors.length <= 0
 		) {
 			window.alert('Please, fill in all fields');

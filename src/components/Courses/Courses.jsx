@@ -12,9 +12,9 @@ export default function Courses(props) {
 	const [searchfield, setSearchfield] = useState('');
 
 	function getAuthorsNames(arr) {
-		var str = '';
+		let str = '';
 		arr.forEach((id) => {
-			var name = authors.find((a) => a.id === id)?.name;
+			const name = authors.find((a) => a.id === id)?.name;
 			if (name) {
 				str += name + ', ';
 			}
@@ -30,7 +30,7 @@ export default function Courses(props) {
 	function filteredCourses() {
 		setCourses(mockedCoursesList);
 		if (searchfield !== '') {
-			var c = courses.filter((course) => {
+			const c = courses.filter((course) => {
 				return (
 					course.title.toLowerCase().includes(searchfield.toLowerCase()) ||
 					course.id.toLowerCase().includes(searchfield.toLowerCase())

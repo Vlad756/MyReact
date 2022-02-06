@@ -25,11 +25,11 @@ export default function CreateCourse(props) {
 	const [description, setDescription] = useState();
 
 	function timeConvert(n) {
-		let num = n > 0 ? n : 0;
-		let hours = num / 60;
-		let rhours = Math.floor(hours);
-		let minutes = (hours - rhours) * 60;
-		let rminutes = Math.round(minutes);
+		const num = n > 0 ? n : 0;
+		const hours = num / 60;
+		const rhours = Math.floor(hours);
+		const minutes = (hours - rhours) * 60;
+		const rminutes = Math.round(minutes);
 		return rhours + ':' + rminutes;
 	}
 

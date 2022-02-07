@@ -28,7 +28,7 @@ export const CreateCourse = ({
 	const [title, setTitle] = useState();
 	const [description, setDescription] = useState();
 
-	function timeConvert(n) {
+	function convertMinutesToHoursMinutes(n) {
 		const num = n > 0 ? n : 0;
 		const hours = Math.floor(num / 60);
 		const minutes = Math.round((num / 60 - hours) * 60);
@@ -135,7 +135,7 @@ export const CreateCourse = ({
 						onChange={(e) => setDuration(e.target.value)}
 						value={duration}
 					/>
-					<h2>Duration: {timeConvert(duration)} hours</h2>
+					<h2>Duration: {convertMinutesToHoursMinutes(duration)} hours</h2>
 				</Grid.Column>
 				<Grid.Column>
 					<h3>Authors</h3>

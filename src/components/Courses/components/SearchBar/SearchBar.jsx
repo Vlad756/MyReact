@@ -7,7 +7,11 @@ import {
 	SEARCH_INPUT_PLACEHOLDER,
 } from '../../../../constants';
 
-export const SearchBar = ({ searchChange, onSearchButtonClick }) => {
+export const SearchBar = ({
+	searchChange,
+	onSearchButtonClick,
+	searchField,
+}) => {
 	return (
 		<Form className='ui form'>
 			<Grid>
@@ -16,6 +20,7 @@ export const SearchBar = ({ searchChange, onSearchButtonClick }) => {
 						onChange={searchChange}
 						type='text'
 						placeholder={SEARCH_INPUT_PLACEHOLDER}
+						value={searchField}
 					/>
 				</Grid.Column>
 				<Grid.Column>

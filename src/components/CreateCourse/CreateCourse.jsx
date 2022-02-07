@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Divider, Form, Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { Input } from '../../common/Input/Input';
-import { mockedCoursesList, mockedAuthorsList } from '../../constants';
 import { v4 as uuidv4 } from 'uuid';
 import {
 	COURSE_NAME_INPUT_TEXT,
@@ -15,10 +14,15 @@ import {
 	DELETE_AUTHOR_BUTTON_TEXT,
 } from '../../constants';
 
-export const CreateCourse = ({ setSwitcher }) => {
-	const [authors, setAuthors] = useState(mockedAuthorsList);
-	const [courses, setCourses] = useState(mockedCoursesList);
+export const CreateCourse = ({
+	setSwitcher,
+	authors,
+	courses,
+	setAuthors,
+	setCourses,
+}) => {
 	const [authorInput, setAuthorInput] = useState();
+	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState();
@@ -33,25 +37,28 @@ export const CreateCourse = ({ setSwitcher }) => {
 		return rhours + ':' + rminutes;
 	}
 
-	function handleCreateAuthor(event) {
-		const newAuthors = [...authors, { id: uuidv4(), name: authorInput }];
-		setAuthors(newAuthors);
+	function handleCreateAuthor() {
+		const newAuthor = { id: uuidv4(), name: authorInput };
+		setAuthors([...authors, newAuthor]);
+		setAvailableAuthors([...availableAuthors, newAuthor]);
 	}
 
-	function handleCreateCourse(event) {
+	function handleCreateCourse() {
 		if (isFormValid()) {
 			window.alert('Please, fill in all fields');
 			return;
 		}
+		const timeElapsed = Date.now();
+		const today = new Date(timeElapsed);
 		const newCourses = [
 			...courses,
 			{
 				id: uuidv4(),
 				title: title,
 				description: description,
-				creationDate: Date.now(),
+				creationDate: today.toDateString(),
 				duration: duration,
-				authors: courseAuthors,
+				authors: courseAuthors.map((x) => x.id),
 			},
 		];
 		setCourses(newCourses);
@@ -62,21 +69,22 @@ export const CreateCourse = ({ setSwitcher }) => {
 		return (
 			title === '' ||
 			description === '' ||
+			description.length <= 2 ||
 			duration <= 0 ||
 			courseAuthors.length <= 0
 		);
 	}
 
-	function handleAddAuthor(author, event) {
+	function handleAddAuthor(author) {
 		const newCourseAuthors = [...courseAuthors, author];
 		setCourseAuthors(newCourseAuthors);
-		const newAuthors = authors.filter((x) => x.id !== author.id);
-		setAuthors(newAuthors);
+		const newAuthors = availableAuthors.filter((x) => x.id !== author.id);
+		setAvailableAuthors(newAuthors);
 	}
 
-	function handleDeleteAuthor(author, event) {
-		const newAuthors = [...authors, author];
-		setAuthors(newAuthors);
+	function handleDeleteAuthor(author) {
+		const newAuthors = [...availableAuthors, author];
+		setAvailableAuthors(newAuthors);
 		const newCourseAuthors = courseAuthors.filter((x) => x.id !== author.id);
 		setCourseAuthors(newCourseAuthors);
 	}
@@ -91,6 +99,7 @@ export const CreateCourse = ({ setSwitcher }) => {
 							onChange={(e) => setTitle(e.target.value)}
 							type='text'
 							placeholder={COURSE_NAME_INPUT_TEXT}
+							value={title}
 						/>
 					</Form.Field>
 				</Grid.Column>
@@ -106,6 +115,7 @@ export const CreateCourse = ({ setSwitcher }) => {
 				<textarea
 					onChange={(e) => setDescription(e.target.value)}
 					placeholder={DESCRIPTION_INPUT_PLACEHOLDER}
+					value={description}
 				/>
 			</Form.Field>
 			<Grid columns={2} relaxed='very' className='createCourseInfo'>
@@ -115,6 +125,7 @@ export const CreateCourse = ({ setSwitcher }) => {
 					<Input
 						placeholder={AUTOR_NAME_INPUT_PLACEHOLDER}
 						onChange={(e) => setAuthorInput(e.target.value)}
+						value={authorInput}
 					/>
 					<Button
 						content={CREATE_AUTHOR_BUTTON_TEXT}
@@ -126,12 +137,13 @@ export const CreateCourse = ({ setSwitcher }) => {
 						type='number'
 						placeholder={DURATION_INPUT_PLACEHOLDER}
 						onChange={(e) => setDuration(e.target.value)}
+						value={duration}
 					/>
 					<h2>Duration: {timeConvert(duration)} hours</h2>
 				</Grid.Column>
 				<Grid.Column>
 					<h3>Authors</h3>
-					{authors.map((author) => (
+					{availableAuthors.map((author) => (
 						<Grid columns={2} relaxed='very' key={author.id}>
 							<Grid.Column>
 								<p>{author.name}</p>

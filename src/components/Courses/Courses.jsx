@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { CourseCard } from './components/CourseCard/CourseCard';
-import {
-	mockedCoursesList as courses,
-	mockedAuthorsList as authors,
-} from '../../constants';
+
 import { Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { ADD_NEW_COURSE_BUTTON_TEXT } from '../../constants';
 
-export const Courses = ({ setSwitcher }) => {
+export const Courses = ({ setSwitcher, authors, courses }) => {
 	const [searchField, setSearchField] = useState('');
-	const [filteredCourses, setFilteredCourses] = useState(courses);
+	const searchInput = useRef('');
 
 	function getAuthorsNames(arr) {
 		return authors
@@ -25,7 +22,7 @@ export const Courses = ({ setSwitcher }) => {
 	}
 
 	function onSearchChange(event) {
-		setSearchField(event.target.value);
+		searchInput.current = event.target.value;
 	}
 
 	function filterCourses(courses) {
@@ -42,8 +39,10 @@ export const Courses = ({ setSwitcher }) => {
 	}
 
 	function handleOnSearchButtonClick() {
-		setFilteredCourses(filterCourses(courses));
+		setSearchField(searchInput.current);
 	}
+
+	const filteredCourses = filterCourses(courses);
 
 	return (
 		<>
@@ -51,6 +50,7 @@ export const Courses = ({ setSwitcher }) => {
 				<Grid.Column width={5} className='coursesSearchBarColumn'>
 					<SearchBar
 						searchChange={onSearchChange}
+						searchValue={searchField}
 						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>

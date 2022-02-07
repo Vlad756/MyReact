@@ -30,11 +30,9 @@ export const CreateCourse = ({
 
 	function timeConvert(n) {
 		const num = n > 0 ? n : 0;
-		const hours = num / 60;
-		const rhours = Math.floor(hours);
-		const minutes = (hours - rhours) * 60;
-		const rminutes = Math.round(minutes);
-		return rhours + ':' + rminutes;
+		const hours = Math.floor(num / 60);
+		const minutes = Math.round((num / 60 - hours) * 60);
+		return `${hours}:${minutes}`;
 	}
 
 	function handleCreateAuthor() {
@@ -48,15 +46,13 @@ export const CreateCourse = ({
 			window.alert('Please, fill in all fields');
 			return;
 		}
-		const timeElapsed = Date.now();
-		const today = new Date(timeElapsed);
 		const newCourses = [
 			...courses,
 			{
 				id: uuidv4(),
 				title: title,
 				description: description,
-				creationDate: today.toDateString(),
+				creationDate: new Date().toDateString(),
 				duration: duration,
 				authors: courseAuthors.map((x) => x.id),
 			},

@@ -8,7 +8,7 @@ import { ADD_NEW_COURSE_BUTTON_TEXT } from '../../constants';
 
 export const Courses = ({ setSwitcher, authors, courses }) => {
 	const [searchField, setSearchField] = useState('');
-	const searchInput = useRef('');
+	const searchFieldRef = useRef('');
 
 	function getAuthorsNames(arr) {
 		return authors
@@ -22,24 +22,20 @@ export const Courses = ({ setSwitcher, authors, courses }) => {
 	}
 
 	function onSearchChange(event) {
-		searchInput.current = event.target.value;
+		searchFieldRef.current = event.target.value;
 	}
 
 	function filterCourses(courses) {
-		if (searchField !== '') {
-			const filtered = courses.filter((course) => {
-				return (
-					course.title.toLowerCase().includes(searchField.toLowerCase()) ||
-					course.id.toLowerCase().includes(searchField.toLowerCase())
-				);
-			});
-			return filtered;
-		}
-		return courses;
+		return courses.filter((course) => {
+			return (
+				course.title.toLowerCase().includes(searchField.toLowerCase()) ||
+				course.id.toLowerCase().includes(searchField.toLowerCase())
+			);
+		});
 	}
 
 	function handleOnSearchButtonClick() {
-		setSearchField(searchInput.current);
+		setSearchField(searchFieldRef.current);
 	}
 
 	const filteredCourses = filterCourses(courses);
@@ -50,7 +46,7 @@ export const Courses = ({ setSwitcher, authors, courses }) => {
 				<Grid.Column width={5} className='coursesSearchBarColumn'>
 					<SearchBar
 						searchChange={onSearchChange}
-						searchValue={searchField}
+						searchValue={searchFieldRef.current}
 						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>

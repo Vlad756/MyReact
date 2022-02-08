@@ -21,12 +21,12 @@ export const CreateCourse = ({
 	setAuthors,
 	setCourses,
 }) => {
-	const [authorInput, setAuthorInput] = useState();
+	const [authorInput, setAuthorInput] = useState('');
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
-	const [title, setTitle] = useState();
-	const [description, setDescription] = useState();
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
 
 	function convertMinutesToHoursMinutes(n) {
 		const num = n > 0 ? n : 0;

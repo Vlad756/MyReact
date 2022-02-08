@@ -8,6 +8,7 @@ import {
 	AUTHORS_SUBSTRING_START,
 	AUTHORS_SUBSTRING_END,
 } from '../../../../constants';
+import { convertMinutesToHoursMinutes } from '../../../../helpers/MinutesToHoursMinutesConverter';
 
 export const CourseCard = ({
 	title,
@@ -31,7 +32,10 @@ export const CourseCard = ({
 				</Grid.Column>
 				<Grid.Column>
 					<CourseCardInfo infoName='Authors: ' value={truncate(authors)} />
-					<CourseCardInfo infoName='Duration: ' value={duration} />
+					<CourseCardInfo
+						infoName='Duration: '
+						value={convertMinutesToHoursMinutes(duration)}
+					/>
 					<CourseCardInfo infoName='Created: ' value={createDate} />
 					<Button
 						content={SHOW_COURSE_BUTTON_TEXT}

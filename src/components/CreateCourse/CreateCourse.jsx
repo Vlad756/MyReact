@@ -13,6 +13,7 @@ import {
 	ADD_AUTHOR_BUTTON_TEXT,
 	DELETE_AUTHOR_BUTTON_TEXT,
 } from '../../constants';
+import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
 
 export const CreateCourse = ({
 	setSwitcher,
@@ -27,13 +28,6 @@ export const CreateCourse = ({
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
-
-	function convertMinutesToHoursMinutes(n) {
-		const num = n > 0 ? n : 0;
-		const hours = Math.floor(num / 60);
-		const minutes = Math.round((num / 60 - hours) * 60);
-		return `${hours}:${minutes}`;
-	}
 
 	function handleCreateAuthor() {
 		const newAuthor = { id: uuidv4(), name: authorInput };

@@ -62,7 +62,7 @@ function App() {
 					<Route path={LOGIN_PATH} element={<Login setToken={setToken} />} />
 					<Route path={REGISTRATION_PATH} element={<Registration />} />
 					<Route
-						path={COURSE_PATH}
+						path={`${COURSE_PATH}/:id`}
 						element={<CourseInfo courses={courses} authors={authors} />}
 					/>
 				</Routes>

@@ -6,6 +6,7 @@ import { Button } from '../../common/Button/Button';
 import { SearchBar } from './components/SearchBar/SearchBar';
 import { ADD_NEW_COURSE_BUTTON_TEXT, COURSES_ADD_PATH } from '../../constants';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export const Courses = ({ authors, courses }) => {
 	const [searchField, setSearchField] = useState('');
@@ -66,6 +67,7 @@ export const Courses = ({ authors, courses }) => {
 			{filteredCourses.map((x, i) => (
 				<CourseCard
 					key={i}
+					id={x.id}
 					title={x.title}
 					description={x.description}
 					authors={getAuthorsNames(x.authors)}
@@ -75,4 +77,9 @@ export const Courses = ({ authors, courses }) => {
 			))}
 		</>
 	);
+};
+
+Courses.propTypes = {
+	authors: PropTypes.array,
+	courses: PropTypes.array,
 };

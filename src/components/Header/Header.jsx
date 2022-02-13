@@ -8,6 +8,7 @@ import {
 	USER_TOKEN_KEY_NAME,
 } from '../../constants';
 import { Logo } from './components/Logo/Logo';
+import PropTypes from 'prop-types';
 
 export const Header = ({ token, setToken }) => {
 	useEffect(() => {
@@ -40,4 +41,9 @@ export const Header = ({ token, setToken }) => {
 			)}
 		</Menu>
 	);
+};
+
+Header.propTypes = {
+	token: PropTypes.string,
+	setToken: PropTypes.func,
 };

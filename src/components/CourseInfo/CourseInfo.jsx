@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Grid, Segment } from 'semantic-ui-react';
 import { COURSES_PATH } from '../../constants';
 import { CourseCardInfo } from '../Courses/components/CourseCard/CourseCardInfo';
+import PropTypes from 'prop-types';
 
 export const CourseInfo = ({ courses, authors }) => {
 	const { id } = useParams();
@@ -44,4 +45,9 @@ export const CourseInfo = ({ courses, authors }) => {
 			</Grid>
 		</Segment>
 	);
+};
+
+CourseInfo.propTypes = {
+	courses: PropTypes.array,
+	authors: PropTypes.array,
 };

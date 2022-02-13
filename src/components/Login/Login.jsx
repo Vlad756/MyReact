@@ -11,6 +11,7 @@ import {
 	REGISTRATION_PATH,
 	USER_TOKEN_KEY_NAME,
 } from '../../constants';
+import PropTypes from 'prop-types';
 
 export const Login = ({ setToken }) => {
 	const navigate = useNavigate();
@@ -67,4 +68,8 @@ export const Login = ({ setToken }) => {
 			</Form.Field>
 		</Form>
 	);
+};
+
+Login.propTypes = {
+	setToken: PropTypes.func,
 };

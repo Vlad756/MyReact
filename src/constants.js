@@ -77,7 +77,7 @@ export const COURSES_PATH = '/courses';
 export const REGISTRATION_PATH = '/registration';
 export const LOGIN_PATH = '/login';
 export const COURSES_ADD_PATH = '/courses/add';
-export const COURSE_PATH = '/course/:id';
+export const COURSE_PATH = '/course';
 
 export const USER_TOKEN_KEY_NAME = 'token';
 export const ENTER_EMAIL_PLACEHOLDER = 'Enter email';

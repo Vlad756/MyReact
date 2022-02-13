@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider, Grid, Segment } from 'semantic-ui-react';
 import { Button } from '../../../../common/Button/Button';
-import { SHOW_COURSE_BUTTON_TEXT } from '../../../../constants';
+import { COURSE_PATH, SHOW_COURSE_BUTTON_TEXT } from '../../../../constants';
 import { CourseCardInfo } from './CourseCardInfo';
 import {
 	MAX_AUTHORS_LENGTH,
@@ -9,8 +9,11 @@ import {
 	AUTHORS_SUBSTRING_END,
 } from '../../../../constants';
 import { convertMinutesToHoursMinutes } from '../../../../helpers/MinutesToHoursMinutesConverter';
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
 export const CourseCard = ({
+	id,
 	title,
 	description,
 	duration,
@@ -39,7 +42,8 @@ export const CourseCard = ({
 					<CourseCardInfo infoName='Created: ' value={createDate} />
 					<Button
 						content={SHOW_COURSE_BUTTON_TEXT}
-						onClick={() => console.log('course')}
+						as={NavLink}
+						to={`${COURSE_PATH}/${id}`}
 					/>
 				</Grid.Column>
 			</Grid>
@@ -47,4 +51,12 @@ export const CourseCard = ({
 			<Divider vertical hidden />
 		</Segment>
 	);
+};
+
+CourseCard.propTypes = {
+	title: PropTypes.string,
+	description: PropTypes.string,
+	duration: PropTypes.number,
+	createDate: PropTypes.string,
+	authors: PropTypes.array,
 };

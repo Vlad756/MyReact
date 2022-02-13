@@ -4,9 +4,10 @@ import { CourseCard } from './components/CourseCard/CourseCard';
 import { Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { SearchBar } from './components/SearchBar/SearchBar';
-import { ADD_NEW_COURSE_BUTTON_TEXT } from '../../constants';
+import { ADD_NEW_COURSE_BUTTON_TEXT, COURSES_ADD_PATH } from '../../constants';
+import { NavLink } from 'react-router-dom';
 
-export const Courses = ({ setSwitcher, authors, courses }) => {
+export const Courses = ({ authors, courses }) => {
 	const [searchField, setSearchField] = useState('');
 	const searchFieldRef = useRef('');
 
@@ -57,7 +58,8 @@ export const Courses = ({ setSwitcher, authors, courses }) => {
 				>
 					<Button
 						content={ADD_NEW_COURSE_BUTTON_TEXT}
-						onClick={() => setSwitcher(true)}
+						as={NavLink}
+						to={COURSES_ADD_PATH}
 					/>
 				</Grid.Column>
 			</Grid>

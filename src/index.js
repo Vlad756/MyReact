@@ -4,10 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'semantic-ui-css/semantic.min.css';
+import { createBrowserHistory } from 'history';
+import { BrowserRouter } from 'react-router-dom';
+
+export const history = createBrowserHistory();
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<BrowserRouter history={history}>
+			<App />
+		</BrowserRouter>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

@@ -12,22 +12,19 @@ import {
 	DURATION_INPUT_PLACEHOLDER,
 	ADD_AUTHOR_BUTTON_TEXT,
 	DELETE_AUTHOR_BUTTON_TEXT,
+	COURSES_PATH,
 } from '../../constants';
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
+import { useNavigate } from 'react-router-dom';
 
-export const CreateCourse = ({
-	setSwitcher,
-	authors,
-	courses,
-	setAuthors,
-	setCourses,
-}) => {
+export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 	const [authorInput, setAuthorInput] = useState('');
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
+	const navigate = useNavigate();
 
 	function handleCreateAuthor() {
 		const newAuthor = { id: uuidv4(), name: authorInput };
@@ -52,7 +49,7 @@ export const CreateCourse = ({
 			},
 		];
 		setCourses(newCourses);
-		setSwitcher(false);
+		navigate(COURSES_PATH);
 	}
 
 	function isFormValid() {

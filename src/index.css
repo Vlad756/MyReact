@@ -45,3 +45,19 @@ code {
 .addCourseButtonColumn {
   margin-right: 10%;
 }
+
+.courseInfoDescriptionColumn{
+  width: 70%;
+}
+
+.courseInfoAuthorsColumn{
+  width: 30%;
+}
+
+.loginForm{
+  margin: 0% 35% 0% 35%;
+}
+
+.registrationForm {
+  margin: 0% 35% 0% 35%;
+}

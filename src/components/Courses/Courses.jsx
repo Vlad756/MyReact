@@ -53,7 +53,7 @@ export const Courses = ({ authors, courses }) => {
 		if (!token) {
 			navigate(LOGIN_PATH);
 		}
-	}, [token]);
+	}, [token, navigate]);
 
 	return (
 		<>

@@ -25,7 +25,7 @@ export const CourseInfo = ({ courses, authors }) => {
 		if (!token) {
 			navigate(LOGIN_PATH);
 		}
-	}, [token]);
+	}, [token, navigate]);
 
 	return (
 		<>

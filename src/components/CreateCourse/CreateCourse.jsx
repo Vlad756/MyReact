@@ -83,7 +83,7 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 		if (!token) {
 			navigate(LOGIN_PATH);
 		}
-	}, [token]);
+	}, [token, navigate]);
 
 	return (
 		<Form className='createCourseForm'>

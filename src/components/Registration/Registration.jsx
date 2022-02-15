@@ -47,6 +47,7 @@ export const Registration = () => {
 				<p>Name</p>
 				<Input
 					type='text'
+					value={nameInput}
 					placeholder={ENTER_NAME_PLACEHOLDER}
 					onChange={(e) => setNameInput(e.target.value)}
 				/>
@@ -55,6 +56,7 @@ export const Registration = () => {
 				<p>Email</p>
 				<Input
 					type='email'
+					value={emailInput}
 					placeholder={ENTER_EMAIL_PLACEHOLDER}
 					onChange={(e) => setEmailInput(e.target.value)}
 				/>
@@ -63,6 +65,7 @@ export const Registration = () => {
 				<p>Password</p>
 				<Input
 					type='password'
+					value={passwordInput}
 					placeholder={ENTER_PASSWORD_PLACEHOLDER}
 					onChange={(e) => setPasswordInput(e.target.value)}
 				/>

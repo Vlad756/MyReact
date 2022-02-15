@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Divider, Form, Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { Input } from '../../common/Input/Input';
@@ -13,9 +13,11 @@ import {
 	ADD_AUTHOR_BUTTON_TEXT,
 	DELETE_AUTHOR_BUTTON_TEXT,
 	COURSES_PATH,
+	LOGIN_PATH,
 } from '../../constants';
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
 import { useNavigate } from 'react-router-dom';
+import { TokenContext } from '../../App';
 
 export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 	const [authorInput, setAuthorInput] = useState('');
@@ -25,14 +27,15 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const navigate = useNavigate();
+	const token = useContext(TokenContext);
 
-	function handleCreateAuthor() {
+	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
 		setAuthors([...authors, newAuthor]);
 		setAvailableAuthors([...availableAuthors, newAuthor]);
-	}
+	};
 
-	function handleCreateCourse() {
+	const handleCreateCourse = () => {
 		if (isFormValid()) {
 			window.alert('Please, fill in all fields');
 			return;
@@ -50,9 +53,9 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 		];
 		setCourses(newCourses);
 		navigate(COURSES_PATH);
-	}
+	};
 
-	function isFormValid() {
+	const isFormValid = () => {
 		return (
 			title === '' ||
 			description === '' ||
@@ -60,21 +63,27 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 			duration <= 0 ||
 			courseAuthors.length <= 0
 		);
-	}
+	};
 
-	function handleAddAuthor(author) {
+	const handleAddAuthor = (author) => {
 		const newCourseAuthors = [...courseAuthors, author];
 		setCourseAuthors(newCourseAuthors);
 		const newAuthors = availableAuthors.filter((x) => x.id !== author.id);
 		setAvailableAuthors(newAuthors);
-	}
+	};
 
-	function handleDeleteAuthor(author) {
+	const handleDeleteAuthor = (author) => {
 		const newAuthors = [...availableAuthors, author];
 		setAvailableAuthors(newAuthors);
 		const newCourseAuthors = courseAuthors.filter((x) => x.id !== author.id);
 		setCourseAuthors(newCourseAuthors);
-	}
+	};
+
+	useEffect(() => {
+		if (!token) {
+			navigate(LOGIN_PATH);
+		}
+	}, [token]);
 
 	return (
 		<Form className='createCourseForm'>

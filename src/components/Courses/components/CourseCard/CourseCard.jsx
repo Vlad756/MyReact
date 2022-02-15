@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider, Grid, Segment } from 'semantic-ui-react';
 import { Button } from '../../../../common/Button/Button';
-import { COURSE_PATH, SHOW_COURSE_BUTTON_TEXT } from '../../../../constants';
+import { COURSES_PATH, SHOW_COURSE_BUTTON_TEXT } from '../../../../constants';
 import { CourseCardInfo } from './CourseCardInfo';
 import {
 	MAX_AUTHORS_LENGTH,
@@ -20,11 +20,11 @@ export const CourseCard = ({
 	createDate,
 	authors,
 }) => {
-	function truncate(str) {
+	const truncate = (str) => {
 		return str.length > MAX_AUTHORS_LENGTH
 			? str.substring(AUTHORS_SUBSTRING_START, AUTHORS_SUBSTRING_END) + '...'
 			: str;
-	}
+	};
 
 	return (
 		<Segment className='courseCard'>
@@ -43,7 +43,7 @@ export const CourseCard = ({
 					<Button
 						content={SHOW_COURSE_BUTTON_TEXT}
 						as={NavLink}
-						to={`${COURSE_PATH}/${id}`}
+						to={`${COURSES_PATH}/${id}`}
 					/>
 				</Grid.Column>
 			</Grid>
@@ -58,5 +58,5 @@ CourseCard.propTypes = {
 	description: PropTypes.string,
 	duration: PropTypes.number,
 	createDate: PropTypes.string,
-	authors: PropTypes.array,
+	authors: PropTypes.string,
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { Courses } from './components/Courses/Courses';
 import { CreateCourse } from './components/CreateCourse/CreateCourse';
 import { Header } from './components/Header/Header';
@@ -10,7 +10,6 @@ import {
 	LOGIN_PATH,
 	REGISTRATION_PATH,
 	COURSES_ADD_PATH,
-	COURSE_PATH,
 	USER_TOKEN_KEY_NAME,
 	DEFAULT_PATH,
 } from './constants';
@@ -19,25 +18,22 @@ import { Container } from 'semantic-ui-react';
 import { Login } from './components/Login/Login';
 import { CourseInfo } from './components/CourseInfo/CourseInfo';
 
-function App() {
+export const TokenContext = createContext(null);
+
+const App = () => {
 	const [authors, setAuthors] = useState(mockedAuthorsList);
 	const [courses, setCourses] = useState(mockedCoursesList);
-	const [token, setToken] = useState();
-
-	useEffect(() => {
-		const token = window.localStorage.getItem(USER_TOKEN_KEY_NAME);
-		setToken(token);
-	}, [setToken, token]);
+	const [token, setToken] = useState(localStorage.getItem(USER_TOKEN_KEY_NAME));
 
 	return (
-		<>
+		<TokenContext.Provider value={token}>
 			<Header token={token} setToken={setToken} />
 			<Container>
 				<Routes>
 					<Route
 						path={DEFAULT_PATH}
 						element={
-							window.localStorage.getItem(USER_TOKEN_KEY_NAME) !== null ? (
+							token ? (
 								<Navigate to={COURSES_PATH} />
 							) : (
 								<Navigate to={LOGIN_PATH} />
@@ -62,13 +58,13 @@ function App() {
 					<Route path={LOGIN_PATH} element={<Login setToken={setToken} />} />
 					<Route path={REGISTRATION_PATH} element={<Registration />} />
 					<Route
-						path={`${COURSE_PATH}/:id`}
+						path={`${COURSES_PATH}/:id`}
 						element={<CourseInfo courses={courses} authors={authors} />}
 					/>
 				</Routes>
 			</Container>
-		</>
+		</TokenContext.Provider>
 	);
-}
+};
 
 export default App;

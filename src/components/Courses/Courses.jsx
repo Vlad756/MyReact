@@ -1,18 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CourseCard } from './components/CourseCard/CourseCard';
 
 import { Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { SearchBar } from './components/SearchBar/SearchBar';
-import { ADD_NEW_COURSE_BUTTON_TEXT, COURSES_ADD_PATH } from '../../constants';
-import { NavLink } from 'react-router-dom';
+import {
+	ADD_NEW_COURSE_BUTTON_TEXT,
+	COURSES_ADD_PATH,
+	LOGIN_PATH,
+} from '../../constants';
+import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { TokenContext } from '../../App';
 
 export const Courses = ({ authors, courses }) => {
 	const [searchField, setSearchField] = useState('');
 	const searchFieldRef = useRef('');
+	const navigate = useNavigate();
+	const token = useContext(TokenContext);
 
-	function getAuthorsNames(arr) {
+	const getAuthorsNames = (arr) => {
 		return authors
 			.reduce((prev, current) => {
 				if (arr.includes(current.id)) {
@@ -21,26 +28,32 @@ export const Courses = ({ authors, courses }) => {
 				return [...prev];
 			}, [])
 			.join(', ');
-	}
+	};
 
-	function onSearchChange(event) {
+	const onSearchChange = (event) => {
 		searchFieldRef.current = event.target.value;
-	}
+	};
 
-	function filterCourses(courses) {
+	const filterCourses = (courses) => {
 		return courses.filter((course) => {
 			return (
 				course.title.toLowerCase().includes(searchField.toLowerCase()) ||
 				course.id.toLowerCase().includes(searchField.toLowerCase())
 			);
 		});
-	}
+	};
 
-	function handleOnSearchButtonClick() {
+	const handleOnSearchButtonClick = () => {
 		setSearchField(searchFieldRef.current);
-	}
+	};
 
 	const filteredCourses = filterCourses(courses);
+
+	useEffect(() => {
+		if (!token) {
+			navigate(LOGIN_PATH);
+		}
+	}, [token]);
 
 	return (
 		<>

@@ -9,6 +9,7 @@ import {
 	ENTER_PASSWORD_PLACEHOLDER,
 	LOGIN_BUTTON_TEXT,
 	REGISTRATION_PATH,
+	USER_NAME_KEY_NAME,
 	USER_TOKEN_KEY_NAME,
 } from '../../constants';
 import PropTypes from 'prop-types';
@@ -33,6 +34,7 @@ export const Login = ({ setToken }) => {
 		const result = await response.json();
 		if (result.successful === true) {
 			window.localStorage.setItem(USER_TOKEN_KEY_NAME, result.result);
+			window.localStorage.setItem(USER_NAME_KEY_NAME, result.user.name);
 			setToken(result.result);
 			navigate(COURSES_PATH);
 		}
@@ -45,6 +47,7 @@ export const Login = ({ setToken }) => {
 				<p>Email</p>
 				<Input
 					type='email'
+					value={emailInput}
 					placeholder={ENTER_EMAIL_PLACEHOLDER}
 					onChange={(e) => setEmailInput(e.target.value)}
 				/>
@@ -53,6 +56,7 @@ export const Login = ({ setToken }) => {
 				<p>Password</p>
 				<Input
 					type='password'
+					value={passwordInput}
 					placeholder={ENTER_PASSWORD_PLACEHOLDER}
 					onChange={(e) => setPasswordInput(e.target.value)}
 				/>

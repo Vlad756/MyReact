@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 export const Header = ({ token, setToken }) => {
 	const handleButtonClick = () => {
 		window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
+		window.localStorage.removeItem(USER_NAME_KEY_NAME);
 		setToken(null);
 	};
 

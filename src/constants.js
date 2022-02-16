@@ -17,7 +17,7 @@ export const mockedCoursesList = [
 		duration: 160,
 		authors: [
 			'27cc3006-e93a-4748-8ca8-73d06aa93b6d',
-			'f762978b-61eb-4096-812bebde22838167',
+			'f762978b-61eb-4096-812b-ebde22838167',
 		],
 	},
 	{
@@ -71,3 +71,18 @@ export const ADD_NEW_COURSE_BUTTON_TEXT = 'Add new course';
 export const MAX_AUTHORS_LENGTH = 40;
 export const AUTHORS_SUBSTRING_START = 0;
 export const AUTHORS_SUBSTRING_END = 37;
+
+export const DEFAULT_PATH = '/';
+export const COURSES_PATH = '/courses';
+export const REGISTRATION_PATH = '/registration';
+export const LOGIN_PATH = '/login';
+export const COURSES_ADD_PATH = '/courses/add';
+
+export const USER_TOKEN_KEY_NAME = 'token';
+export const USER_NAME_KEY_NAME = 'username';
+export const ENTER_EMAIL_PLACEHOLDER = 'Enter email';
+export const ENTER_PASSWORD_PLACEHOLDER = 'Enter password';
+export const LOGIN_BUTTON_TEXT = 'Login';
+export const REGISTRATION_BUTTON_TEXT = 'Registration';
+export const ENTER_NAME_PLACEHOLDER = 'Enter name';
+export const LOGOUT_BUTTON_TEXT = 'Logout';

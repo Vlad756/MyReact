@@ -11,6 +11,8 @@ import {
 import { convertMinutesToHoursMinutes } from '../../../../helpers/MinutesToHoursMinutesConverter';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { courseRemoved } from '../../../../store/courses/actionCreators';
 
 export const CourseCard = ({
 	id,
@@ -20,10 +22,16 @@ export const CourseCard = ({
 	createDate,
 	authors,
 }) => {
+	const dispatch = useDispatch();
+
 	const truncate = (str) => {
 		return str.length > MAX_AUTHORS_LENGTH
 			? str.substring(AUTHORS_SUBSTRING_START, AUTHORS_SUBSTRING_END) + '...'
 			: str;
+	};
+
+	const handleDeleteCourse = () => {
+		dispatch(courseRemoved(id));
 	};
 
 	return (
@@ -45,6 +53,8 @@ export const CourseCard = ({
 						as={NavLink}
 						to={`${COURSES_PATH}/${id}`}
 					/>
+					<Button icon='edit' />
+					<Button icon='trash' onClick={handleDeleteCourse} />
 				</Grid.Column>
 			</Grid>
 

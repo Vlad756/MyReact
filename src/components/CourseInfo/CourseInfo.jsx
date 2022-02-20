@@ -1,19 +1,21 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Grid, Segment } from 'semantic-ui-react';
 import { COURSES_PATH, LOGIN_PATH } from '../../constants';
 import { CourseCardInfo } from '../Courses/components/CourseCard/CourseCardInfo';
-import PropTypes from 'prop-types';
-import { TokenContext } from '../../App';
+import { useSelector } from 'react-redux';
+import { selectAuthor, selectCourse, selectUser } from '../../store/selectors';
 
-export const CourseInfo = ({ courses, authors }) => {
+export const CourseInfo = () => {
+	const user = useSelector(selectUser);
+	const courses = useSelector(selectCourse);
+	const author = useSelector(selectAuthor);
 	const { id } = useParams();
-	const token = useContext(TokenContext);
 	const navigate = useNavigate();
-	const course = courses.find((c) => c.id === id);
+	const currentCourse = courses.find((c) => c.id === id);
 
 	const getAuthors = (arr) => {
-		return authors.reduce((prev, current) => {
+		return author.reduce((prev, current) => {
 			if (arr.includes(current.id)) {
 				return [...prev, current];
 			}
@@ -22,30 +24,33 @@ export const CourseInfo = ({ courses, authors }) => {
 	};
 
 	useEffect(() => {
-		if (!token) {
+		if (!user.isAuth) {
 			navigate(LOGIN_PATH);
 		}
-	}, [token, navigate]);
+	}, [user.isAuth, navigate]);
 
 	return (
 		<>
-			{course && (
+			{currentCourse && (
 				<Segment>
 					<Link to={COURSES_PATH}>Back to courses</Link>
-					<h3>{course.title}</h3>
+					<h3>{currentCourse.title}</h3>
 					<Grid columns={2} relaxed='very'>
 						<Grid.Column className='courseInfoDescriptionColumn'>
-							{course.description}
+							{currentCourse.description}
 						</Grid.Column>
 						<Grid.Column className='courseInfoAuthorsColumn'>
 							<CourseCardInfo infoName={'ID'} value={id} />
-							<CourseCardInfo infoName={'Duration'} value={course.duration} />
+							<CourseCardInfo
+								infoName={'Duration'}
+								value={currentCourse.duration}
+							/>
 							<CourseCardInfo
 								infoName={'Created'}
-								value={course.creationDate}
+								value={currentCourse.creationDate}
 							/>
 							<p className='courseCardInfo'>Authors</p>
-							{getAuthors(course.authors).map((a, i) => (
+							{getAuthors(currentCourse.authors).map((a, i) => (
 								<p key={i}>{a.name}</p>
 							))}
 						</Grid.Column>
@@ -54,9 +59,4 @@ export const CourseInfo = ({ courses, authors }) => {
 			)}
 		</>
 	);
-};
-
-CourseInfo.propTypes = {
-	courses: PropTypes.array,
-	authors: PropTypes.array,
 };

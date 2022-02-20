@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Divider, Form, Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { Input } from '../../common/Input/Input';
@@ -17,21 +17,26 @@ import {
 } from '../../constants';
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
 import { useNavigate } from 'react-router-dom';
-import { TokenContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { authorAdded } from '../../store/authors/actionCreators';
+import { courseAdded } from '../../store/courses/actionCreators';
+import { selectAuthor, selectUser } from '../../store/selectors';
 
-export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
+export const CreateCourse = () => {
+	const user = useSelector(selectUser);
+	const author = useSelector(selectAuthor);
 	const [authorInput, setAuthorInput] = useState('');
-	const [availableAuthors, setAvailableAuthors] = useState(authors);
+	const [availableAuthors, setAvailableAuthors] = useState(author);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const navigate = useNavigate();
-	const token = useContext(TokenContext);
+	const dispatch = useDispatch();
 
 	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
-		setAuthors([...authors, newAuthor]);
+		dispatch(authorAdded(newAuthor));
 		setAvailableAuthors([...availableAuthors, newAuthor]);
 	};
 
@@ -40,18 +45,15 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 			window.alert('Please, fill in all fields');
 			return;
 		}
-		const newCourses = [
-			...courses,
-			{
-				id: uuidv4(),
-				title: title,
-				description: description,
-				creationDate: new Date().toDateString(),
-				duration: duration,
-				authors: courseAuthors.map((x) => x.id),
-			},
-		];
-		setCourses(newCourses);
+		const newCourse = {
+			id: uuidv4(),
+			title: title,
+			description: description,
+			creationDate: new Date().toDateString(),
+			duration: duration,
+			authors: courseAuthors.map((x) => x.id),
+		};
+		dispatch(courseAdded(newCourse));
 		navigate(COURSES_PATH);
 	};
 
@@ -80,10 +82,10 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 	};
 
 	useEffect(() => {
-		if (!token) {
+		if (!user.isAuth) {
 			navigate(LOGIN_PATH);
 		}
-	}, [token, navigate]);
+	}, [user.isAuth, navigate]);
 
 	return (
 		<Form className='createCourseForm'>

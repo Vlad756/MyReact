@@ -1,33 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
-import {
-	LOGIN_PATH,
-	LOGOUT_BUTTON_TEXT,
-	USER_NAME_KEY_NAME,
-	USER_TOKEN_KEY_NAME,
-} from '../../constants';
+import { LOGIN_PATH, LOGOUT_BUTTON_TEXT } from '../../constants';
 import { Logo } from './components/Logo/Logo';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../store/user/actionCreators';
+import { selectUser } from '../../store/selectors';
 
-export const Header = ({ token, setToken }) => {
+export const Header = () => {
+	const dispatch = useDispatch();
+	const user = useSelector(selectUser);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
 	const handleButtonClick = () => {
-		window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
-		window.localStorage.removeItem(USER_NAME_KEY_NAME);
-		setToken(null);
+		dispatch(logout());
+		setIsLoggedIn(false);
 	};
+
+	useEffect(() => {
+		setIsLoggedIn(user.isAuth);
+	}, [user]);
 
 	return (
 		<Menu>
 			<Menu.Item>
 				<Logo />
 			</Menu.Item>
-			{token !== null && (
+			{isLoggedIn && (
 				<Menu.Menu position='right'>
-					<Menu.Item>
-						{window.localStorage.getItem(USER_NAME_KEY_NAME)}
-					</Menu.Item>
+					<Menu.Item>{user.name}</Menu.Item>
 					<Menu.Item floated='right'>
 						<Button
 							content={LOGOUT_BUTTON_TEXT}
@@ -40,9 +42,4 @@ export const Header = ({ token, setToken }) => {
 			)}
 		</Menu>
 	);
-};
-
-Header.propTypes = {
-	token: PropTypes.string,
-	setToken: PropTypes.func,
 };

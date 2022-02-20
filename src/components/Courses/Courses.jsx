@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CourseCard } from './components/CourseCard/CourseCard';
 
 import { Grid } from 'semantic-ui-react';
@@ -10,17 +10,19 @@ import {
 	LOGIN_PATH,
 } from '../../constants';
 import { NavLink, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { TokenContext } from '../../App';
+import { useSelector } from 'react-redux';
+import { selectAuthor, selectCourse, selectUser } from '../../store/selectors';
 
-export const Courses = ({ authors, courses }) => {
+export const Courses = () => {
+	const user = useSelector(selectUser);
+	const author = useSelector(selectAuthor);
+	const course = useSelector(selectCourse);
 	const [searchField, setSearchField] = useState('');
 	const searchFieldRef = useRef('');
 	const navigate = useNavigate();
-	const token = useContext(TokenContext);
 
 	const getAuthorsNames = (arr) => {
-		return authors
+		return author
 			.reduce((prev, current) => {
 				if (arr.includes(current.id)) {
 					return [...prev, current.name];
@@ -47,13 +49,13 @@ export const Courses = ({ authors, courses }) => {
 		setSearchField(searchFieldRef.current);
 	};
 
-	const filteredCourses = filterCourses(courses);
+	const filteredCourses = filterCourses(course);
 
 	useEffect(() => {
-		if (!token) {
+		if (!user.isAuth) {
 			navigate(LOGIN_PATH);
 		}
-	}, [token, navigate]);
+	}, [user.isAuth, navigate]);
 
 	return (
 		<>
@@ -90,9 +92,4 @@ export const Courses = ({ authors, courses }) => {
 			))}
 		</>
 	);
-};
-
-Courses.propTypes = {
-	authors: PropTypes.array,
-	courses: PropTypes.array,
 };

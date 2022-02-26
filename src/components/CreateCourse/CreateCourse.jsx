@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Divider, Form, Grid } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
 import { Input } from '../../common/Input/Input';
@@ -17,22 +17,34 @@ import {
 } from '../../constants';
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
 import { useNavigate } from 'react-router-dom';
-import { TokenContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { authorAdded, setAuthors } from '../../store/authors/actionCreators';
+import { courseAdded, setCourses } from '../../store/courses/actionCreators';
+import {
+	selectAuthors,
+	selectCourses,
+	selectUser,
+} from '../../store/selectors';
+import { fetchAuthors, fetchCourses } from '../../services';
 
-export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
+export const CreateCourse = () => {
+	const { isAuth } = useSelector(selectUser);
+	const authors = useSelector(selectAuthors);
+	const courses = useSelector(selectCourses);
 	const [authorInput, setAuthorInput] = useState('');
-	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const navigate = useNavigate();
-	const token = useContext(TokenContext);
+	const dispatch = useDispatch();
+	const availableAuthors = authors.filter(
+		(author) => !courseAuthors.includes(author)
+	);
 
 	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
-		setAuthors([...authors, newAuthor]);
-		setAvailableAuthors([...availableAuthors, newAuthor]);
+		dispatch(authorAdded(newAuthor));
 	};
 
 	const handleCreateCourse = () => {
@@ -40,18 +52,15 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 			window.alert('Please, fill in all fields');
 			return;
 		}
-		const newCourses = [
-			...courses,
-			{
-				id: uuidv4(),
-				title: title,
-				description: description,
-				creationDate: new Date().toDateString(),
-				duration: duration,
-				authors: courseAuthors.map((x) => x.id),
-			},
-		];
-		setCourses(newCourses);
+		const newCourse = {
+			id: uuidv4(),
+			title: title,
+			description: description,
+			creationDate: new Date().toDateString(),
+			duration: duration,
+			authors: courseAuthors.map((x) => x.id),
+		};
+		dispatch(courseAdded(newCourse));
 		navigate(COURSES_PATH);
 	};
 
@@ -65,25 +74,36 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 		);
 	};
 
-	const handleAddAuthor = (author) => {
+	const addAuthorToCourse = (author) => {
 		const newCourseAuthors = [...courseAuthors, author];
 		setCourseAuthors(newCourseAuthors);
-		const newAuthors = availableAuthors.filter((x) => x.id !== author.id);
-		setAvailableAuthors(newAuthors);
 	};
 
-	const handleDeleteAuthor = (author) => {
-		const newAuthors = [...availableAuthors, author];
-		setAvailableAuthors(newAuthors);
+	const removeAuthorFromCourse = (author) => {
 		const newCourseAuthors = courseAuthors.filter((x) => x.id !== author.id);
 		setCourseAuthors(newCourseAuthors);
 	};
 
 	useEffect(() => {
-		if (!token) {
+		if (!isAuth) {
 			navigate(LOGIN_PATH);
+		} else {
+			if (!courses.length) {
+				fetchCourses().then((data) => {
+					if (data && data.successful) {
+						dispatch(setCourses(data.result));
+					}
+				});
+			}
+			if (!authors.length) {
+				fetchAuthors().then((data) => {
+					if (data && data.successful) {
+						dispatch(setAuthors(data.result));
+					}
+				});
+			}
 		}
-	}, [token, navigate]);
+	}, [isAuth, dispatch, navigate]);
 
 	return (
 		<Form className='createCourseForm'>
@@ -147,7 +167,7 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 							<Grid.Column>
 								<Button
 									content={ADD_AUTHOR_BUTTON_TEXT}
-									onClick={(event) => handleAddAuthor(author, event)}
+									onClick={(event) => addAuthorToCourse(author, event)}
 								/>
 							</Grid.Column>
 						</Grid>
@@ -161,7 +181,7 @@ export const CreateCourse = ({ authors, courses, setAuthors, setCourses }) => {
 							<Grid.Column>
 								<Button
 									content={DELETE_AUTHOR_BUTTON_TEXT}
-									onClick={(event) => handleDeleteAuthor(author, event)}
+									onClick={(event) => removeAuthorFromCourse(author, event)}
 								/>
 							</Grid.Column>
 						</Grid>

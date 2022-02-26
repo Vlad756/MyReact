@@ -5,17 +5,24 @@ import { Button } from '../../common/Button/Button';
 import {
 	LOGIN_PATH,
 	LOGOUT_BUTTON_TEXT,
+	USER_EMAIL_KEY_NAME,
 	USER_NAME_KEY_NAME,
 	USER_TOKEN_KEY_NAME,
 } from '../../constants';
 import { Logo } from './components/Logo/Logo';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogout } from '../../store/user/actionCreators';
+import { selectUser } from '../../store/selectors';
 
-export const Header = ({ token, setToken }) => {
+export const Header = () => {
+	const dispatch = useDispatch();
+	const { isAuth, name } = useSelector(selectUser);
+
 	const handleButtonClick = () => {
-		window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
+		dispatch(userLogout());
 		window.localStorage.removeItem(USER_NAME_KEY_NAME);
-		setToken(null);
+		window.localStorage.removeItem(USER_EMAIL_KEY_NAME);
+		window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
 	};
 
 	return (
@@ -23,11 +30,9 @@ export const Header = ({ token, setToken }) => {
 			<Menu.Item>
 				<Logo />
 			</Menu.Item>
-			{token !== null && (
+			{isAuth && (
 				<Menu.Menu position='right'>
-					<Menu.Item>
-						{window.localStorage.getItem(USER_NAME_KEY_NAME)}
-					</Menu.Item>
+					<Menu.Item>{name}</Menu.Item>
 					<Menu.Item floated='right'>
 						<Button
 							content={LOGOUT_BUTTON_TEXT}
@@ -40,9 +45,4 @@ export const Header = ({ token, setToken }) => {
 			)}
 		</Menu>
 	);
-};
-
-Header.propTypes = {
-	token: PropTypes.string,
-	setToken: PropTypes.func,
 };

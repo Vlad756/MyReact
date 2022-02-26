@@ -10,6 +10,7 @@ import {
 	LOGIN_PATH,
 	REGISTRATION_BUTTON_TEXT,
 } from '../../constants';
+import { registrationRequest } from '../../services';
 
 export const Registration = () => {
 	const navigate = useNavigate();
@@ -18,20 +19,13 @@ export const Registration = () => {
 	const [passwordInput, setPasswordInput] = useState();
 
 	const handleSubmit = async () => {
-		const newUser = {
+		const data = await registrationRequest({
 			name: nameInput,
 			email: emailInput,
 			password: passwordInput,
-		};
-		const response = await fetch('http://localhost:3000/register', {
-			method: 'POST',
-			body: JSON.stringify(newUser),
-			headers: {
-				'Content-Type': 'application/json',
-			},
 		});
-		const result = await response.json();
-		if (result.successful === true) {
+
+		if (data && data.successful === true) {
 			navigate(LOGIN_PATH);
 		}
 	};

@@ -9,15 +9,19 @@ import {
 	ENTER_PASSWORD_PLACEHOLDER,
 	LOGIN_BUTTON_TEXT,
 	REGISTRATION_PATH,
+	USER_EMAIL_KEY_NAME,
 	USER_NAME_KEY_NAME,
 	USER_TOKEN_KEY_NAME,
 } from '../../constants';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { userSet } from '../../store/user/actionCreators';
 
-export const Login = ({ setToken }) => {
+export const Login = () => {
 	const navigate = useNavigate();
 	const [emailInput, setEmailInput] = useState();
 	const [passwordInput, setPasswordInput] = useState();
+	const dispatch = useDispatch();
 
 	const handleFormSubmit = async () => {
 		const user = {
@@ -35,7 +39,10 @@ export const Login = ({ setToken }) => {
 		if (result.successful === true) {
 			window.localStorage.setItem(USER_TOKEN_KEY_NAME, result.result);
 			window.localStorage.setItem(USER_NAME_KEY_NAME, result.user.name);
-			setToken(result.result);
+			window.localStorage.setItem(USER_EMAIL_KEY_NAME, result.user.email);
+			dispatch(
+				userSet(true, result.user.name, result.user.email, result.result)
+			);
 			navigate(COURSES_PATH);
 		}
 	};

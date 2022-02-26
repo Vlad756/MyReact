@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CourseCard } from './components/CourseCard/CourseCard';
 
 import { Grid } from 'semantic-ui-react';
@@ -10,14 +10,24 @@ import {
 	LOGIN_PATH,
 } from '../../constants';
 import { NavLink, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { TokenContext } from '../../App';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	selectAuthors,
+	selectCourses,
+	selectUser,
+} from '../../store/selectors';
+import { fetchAuthors, fetchCourses } from '../../services';
+import { setCourses } from '../../store/courses/actionCreators';
+import { setAuthors } from '../../store/authors/actionCreators';
 
-export const Courses = ({ authors, courses }) => {
+export const Courses = () => {
+	const { isAuth } = useSelector(selectUser);
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
+	const dispatch = useDispatch();
 	const [searchField, setSearchField] = useState('');
 	const searchFieldRef = useRef('');
 	const navigate = useNavigate();
-	const token = useContext(TokenContext);
 
 	const getAuthorsNames = (arr) => {
 		return authors
@@ -50,10 +60,25 @@ export const Courses = ({ authors, courses }) => {
 	const filteredCourses = filterCourses(courses);
 
 	useEffect(() => {
-		if (!token) {
+		if (!isAuth) {
 			navigate(LOGIN_PATH);
+		} else {
+			if (!courses.length) {
+				fetchCourses().then((data) => {
+					if (data && data.successful) {
+						dispatch(setCourses(data.result));
+					}
+				});
+			}
+			if (!authors.length) {
+				fetchAuthors().then((data) => {
+					if (data && data.successful) {
+						dispatch(setAuthors(data.result));
+					}
+				});
+			}
 		}
-	}, [token, navigate]);
+	}, [isAuth, dispatch, navigate]);
 
 	return (
 		<>
@@ -90,9 +115,4 @@ export const Courses = ({ authors, courses }) => {
 			))}
 		</>
 	);
-};
-
-Courses.propTypes = {
-	authors: PropTypes.array,
-	courses: PropTypes.array,
 };

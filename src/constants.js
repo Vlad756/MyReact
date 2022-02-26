@@ -78,6 +78,7 @@ export const REGISTRATION_PATH = '/registration';
 export const LOGIN_PATH = '/login';
 export const COURSES_ADD_PATH = '/courses/add';
 
+export const USER_EMAIL_KEY_NAME = 'email';
 export const USER_TOKEN_KEY_NAME = 'token';
 export const USER_NAME_KEY_NAME = 'username';
 export const ENTER_EMAIL_PLACEHOLDER = 'Enter email';
@@ -86,3 +87,5 @@ export const LOGIN_BUTTON_TEXT = 'Login';
 export const REGISTRATION_BUTTON_TEXT = 'Registration';
 export const ENTER_NAME_PLACEHOLDER = 'Enter name';
 export const LOGOUT_BUTTON_TEXT = 'Logout';
+export const COURSES_ALL_PATH = '/courses/all';
+export const AUTHORS_ALL_PATH = '/authors/all';

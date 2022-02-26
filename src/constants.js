@@ -87,3 +87,5 @@ export const LOGIN_BUTTON_TEXT = 'Login';
 export const REGISTRATION_BUTTON_TEXT = 'Registration';
 export const ENTER_NAME_PLACEHOLDER = 'Enter name';
 export const LOGOUT_BUTTON_TEXT = 'Logout';
+export const COURSES_ALL_PATH = '/courses/all';
+export const AUTHORS_ALL_PATH = '/authors/all';

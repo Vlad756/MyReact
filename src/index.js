@@ -7,7 +7,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { createBrowserHistory } from 'history';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './services';
+import { store } from './store';
 
 export const history = createBrowserHistory();
 

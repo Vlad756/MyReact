@@ -3,19 +3,27 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Grid, Segment } from 'semantic-ui-react';
 import { COURSES_PATH, LOGIN_PATH } from '../../constants';
 import { CourseCardInfo } from '../Courses/components/CourseCard/CourseCardInfo';
-import { useSelector } from 'react-redux';
-import { selectAuthor, selectCourse, selectUser } from '../../store/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	selectAuthors,
+	selectCourses,
+	selectUser,
+} from '../../store/selectors';
+import { fetchAuthors, fetchCourses } from '../../services';
+import { setCourses } from '../../store/courses/actionCreators';
+import { setAuthors } from '../../store/authors/actionCreators';
 
 export const CourseInfo = () => {
-	const user = useSelector(selectUser);
-	const courses = useSelector(selectCourse);
-	const author = useSelector(selectAuthor);
+	const { isAuth } = useSelector(selectUser);
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
+	const dispatch = useDispatch();
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const currentCourse = courses.find((c) => c.id === id);
 
 	const getAuthors = (arr) => {
-		return author.reduce((prev, current) => {
+		return authors.reduce((prev, current) => {
 			if (arr.includes(current.id)) {
 				return [...prev, current];
 			}
@@ -24,10 +32,25 @@ export const CourseInfo = () => {
 	};
 
 	useEffect(() => {
-		if (!user.isAuth) {
+		if (!isAuth) {
 			navigate(LOGIN_PATH);
+		} else {
+			if (!courses.length) {
+				fetchCourses().then((data) => {
+					if (data && data.successful) {
+						dispatch(setCourses(data.result));
+					}
+				});
+			}
+			if (!authors.length) {
+				fetchAuthors().then((data) => {
+					if (data && data.successful) {
+						dispatch(setAuthors(data.result));
+					}
+				});
+			}
 		}
-	}, [user.isAuth, navigate]);
+	}, [isAuth, dispatch, navigate]);
 
 	return (
 		<>

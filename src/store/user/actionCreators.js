@@ -1,7 +1,7 @@
 import * as actions from './actionTypes';
 
 export const login = (email, password) => ({
-	type: actions.LOGOUT,
+	type: actions.USER_LOGIN,
 	payload: {
 		email: email,
 		password: password,
@@ -9,17 +9,7 @@ export const login = (email, password) => ({
 });
 
 export const logout = () => ({
-	type: actions.LOGOUT,
-	payload: {},
-});
-
-export const register = (name, email, password) => ({
-	type: actions.REGISTER,
-	payload: {
-		name: name,
-		email: email,
-		password: password,
-	},
+	type: actions.USER_LOGOUT,
 });
 
 export const setUserStore = (isAuth, name, email, token) => ({

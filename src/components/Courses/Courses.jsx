@@ -10,19 +10,27 @@ import {
 	LOGIN_PATH,
 } from '../../constants';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectAuthor, selectCourse, selectUser } from '../../store/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	selectAuthors,
+	selectCourses,
+	selectUser,
+} from '../../store/selectors';
+import { fetchAuthors, fetchCourses } from '../../services';
+import { setCourses } from '../../store/courses/actionCreators';
+import { setAuthors } from '../../store/authors/actionCreators';
 
 export const Courses = () => {
-	const user = useSelector(selectUser);
-	const author = useSelector(selectAuthor);
-	const course = useSelector(selectCourse);
+	const { isAuth } = useSelector(selectUser);
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
+	const dispatch = useDispatch();
 	const [searchField, setSearchField] = useState('');
 	const searchFieldRef = useRef('');
 	const navigate = useNavigate();
 
 	const getAuthorsNames = (arr) => {
-		return author
+		return authors
 			.reduce((prev, current) => {
 				if (arr.includes(current.id)) {
 					return [...prev, current.name];
@@ -49,13 +57,28 @@ export const Courses = () => {
 		setSearchField(searchFieldRef.current);
 	};
 
-	const filteredCourses = filterCourses(course);
+	const filteredCourses = filterCourses(courses);
 
 	useEffect(() => {
-		if (!user.isAuth) {
+		if (!isAuth) {
 			navigate(LOGIN_PATH);
+		} else {
+			if (!courses.length) {
+				fetchCourses().then((data) => {
+					if (data && data.successful) {
+						dispatch(setCourses(data.result));
+					}
+				});
+			}
+			if (!authors.length) {
+				fetchAuthors().then((data) => {
+					if (data && data.successful) {
+						dispatch(setAuthors(data.result));
+					}
+				});
+			}
 		}
-	}, [user.isAuth, navigate]);
+	}, [isAuth, dispatch, navigate]);
 
 	return (
 		<>

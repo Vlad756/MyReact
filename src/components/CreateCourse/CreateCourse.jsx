@@ -18,26 +18,35 @@ import {
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { authorAdded } from '../../store/authors/actionCreators';
-import { courseAdded } from '../../store/courses/actionCreators';
-import { selectAuthor, selectUser } from '../../store/selectors';
+import { authorAdded, setAuthors } from '../../store/authors/actionCreators';
+import { courseAdded, setCourses } from '../../store/courses/actionCreators';
+import {
+	selectAuthors,
+	selectCourses,
+	selectUser,
+} from '../../store/selectors';
+import { fetchAuthors, fetchCourses } from '../../services';
 
 export const CreateCourse = () => {
-	const user = useSelector(selectUser);
-	const author = useSelector(selectAuthor);
+	const { isAuth } = useSelector(selectUser);
+	const authors = useSelector(selectAuthors);
+	const courses = useSelector(selectCourses);
 	const [authorInput, setAuthorInput] = useState('');
-	const [availableAuthors, setAvailableAuthors] = useState(author);
+	// const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const availableAuthors = authors.filter(
+		(author) => !courseAuthors.includes(author)
+	);
 
 	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
 		dispatch(authorAdded(newAuthor));
-		setAvailableAuthors([...availableAuthors, newAuthor]);
+		// setAvailableAuthors([...availableAuthors, newAuthor]);
 	};
 
 	const handleCreateCourse = () => {
@@ -67,25 +76,36 @@ export const CreateCourse = () => {
 		);
 	};
 
-	const handleAddAuthor = (author) => {
+	const addAuthorToCourse = (author) => {
 		const newCourseAuthors = [...courseAuthors, author];
 		setCourseAuthors(newCourseAuthors);
-		const newAuthors = availableAuthors.filter((x) => x.id !== author.id);
-		setAvailableAuthors(newAuthors);
 	};
 
-	const handleDeleteAuthor = (author) => {
-		const newAuthors = [...availableAuthors, author];
-		setAvailableAuthors(newAuthors);
+	const removeAuthorFromCourse = (author) => {
 		const newCourseAuthors = courseAuthors.filter((x) => x.id !== author.id);
 		setCourseAuthors(newCourseAuthors);
 	};
 
 	useEffect(() => {
-		if (!user.isAuth) {
+		if (!isAuth) {
 			navigate(LOGIN_PATH);
+		} else {
+			if (!courses.length) {
+				fetchCourses().then((data) => {
+					if (data && data.successful) {
+						dispatch(setCourses(data.result));
+					}
+				});
+			}
+			if (!authors.length) {
+				fetchAuthors().then((data) => {
+					if (data && data.successful) {
+						dispatch(setAuthors(data.result));
+					}
+				});
+			}
 		}
-	}, [user.isAuth, navigate]);
+	}, [isAuth, dispatch, navigate]);
 
 	return (
 		<Form className='createCourseForm'>
@@ -149,7 +169,7 @@ export const CreateCourse = () => {
 							<Grid.Column>
 								<Button
 									content={ADD_AUTHOR_BUTTON_TEXT}
-									onClick={(event) => handleAddAuthor(author, event)}
+									onClick={(event) => addAuthorToCourse(author, event)}
 								/>
 							</Grid.Column>
 						</Grid>
@@ -163,7 +183,7 @@ export const CreateCourse = () => {
 							<Grid.Column>
 								<Button
 									content={DELETE_AUTHOR_BUTTON_TEXT}
-									onClick={(event) => handleDeleteAuthor(author, event)}
+									onClick={(event) => removeAuthorFromCourse(author, event)}
 								/>
 							</Grid.Column>
 						</Grid>

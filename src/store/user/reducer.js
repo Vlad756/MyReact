@@ -6,8 +6,7 @@ import {
 import * as actions from './actionTypes';
 
 const initialUserState = {
-	isAuth:
-		window.localStorage.getItem(USER_TOKEN_KEY_NAME) !== null ? true : false,
+	isAuth: !!window.localStorage.getItem(USER_TOKEN_KEY_NAME),
 	name: window.localStorage.getItem(USER_NAME_KEY_NAME) ?? '',
 	email: window.localStorage.getItem(USER_EMAIL_KEY_NAME) ?? '',
 	token: window.localStorage.getItem(USER_TOKEN_KEY_NAME) ?? '',
@@ -15,22 +14,17 @@ const initialUserState = {
 
 export const userReducer = (state = initialUserState, action) => {
 	switch (action.type) {
-		case actions.LOGIN:
+		case actions.USER_LOGIN:
 			return state;
-		case actions.LOGOUT:
-			window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
-			window.localStorage.removeItem(USER_NAME_KEY_NAME);
-			window.localStorage.removeItem(USER_EMAIL_KEY_NAME);
-			return initialUserState;
-		case actions.REGISTER:
-			return state;
-		case actions.SET_USER_STORE:
+		case actions.USER_LOGOUT:
 			return {
-				isAuth: action.payload.isAuth,
-				name: action.payload.name,
-				email: action.payload.email,
-				token: action.payload.token,
+				isAuth: false,
+				name: '',
+				email: '',
+				token: '',
 			};
+		case actions.SET_USER_STORE:
+			return action.payload;
 		default:
 			return state;
 	}

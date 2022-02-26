@@ -1,4 +1,3 @@
-export const LOGIN = 'login';
-export const LOGOUT = 'logout';
-export const REGISTER = 'register';
+export const USER_LOGIN = 'userLogin';
+export const USER_LOGOUT = 'userLogout';
 export const SET_USER_STORE = 'setUserStore';

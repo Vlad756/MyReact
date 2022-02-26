@@ -1,3 +1,3 @@
 export const selectUser = (state) => state.user;
-export const selectCourse = (state) => state.course;
-export const selectAuthor = (state) => state.author;
+export const selectCourses = (state) => state.courses;
+export const selectAuthors = (state) => state.authors;

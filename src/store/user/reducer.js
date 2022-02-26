@@ -14,8 +14,6 @@ const initialUserState = {
 
 export const userReducer = (state = initialUserState, action) => {
 	switch (action.type) {
-		case actions.USER_LOGIN:
-			return state;
 		case actions.USER_LOGOUT:
 			return {
 				isAuth: false,
@@ -23,7 +21,7 @@ export const userReducer = (state = initialUserState, action) => {
 				email: '',
 				token: '',
 			};
-		case actions.SET_USER_STORE:
+		case actions.USER_SET:
 			return action.payload;
 		default:
 			return state;

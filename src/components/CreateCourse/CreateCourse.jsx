@@ -32,7 +32,6 @@ export const CreateCourse = () => {
 	const authors = useSelector(selectAuthors);
 	const courses = useSelector(selectCourses);
 	const [authorInput, setAuthorInput] = useState('');
-	// const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [courseAuthors, setCourseAuthors] = useState([]);
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
@@ -46,7 +45,6 @@ export const CreateCourse = () => {
 	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
 		dispatch(authorAdded(newAuthor));
-		// setAvailableAuthors([...availableAuthors, newAuthor]);
 	};
 
 	const handleCreateCourse = () => {

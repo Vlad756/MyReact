@@ -1,19 +1,11 @@
 import * as actions from './actionTypes';
 
-export const login = (email, password) => ({
-	type: actions.USER_LOGIN,
-	payload: {
-		email: email,
-		password: password,
-	},
-});
-
-export const logout = () => ({
+export const userLogout = () => ({
 	type: actions.USER_LOGOUT,
 });
 
-export const setUserStore = (isAuth, name, email, token) => ({
-	type: actions.SET_USER_STORE,
+export const userSet = (isAuth, name, email, token) => ({
+	type: actions.USER_SET,
 	payload: {
 		isAuth: isAuth,
 		name: name,

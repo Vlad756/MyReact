@@ -15,7 +15,7 @@ import {
 } from '../../constants';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { setUserStore } from '../../store/user/actionCreators';
+import { userSet } from '../../store/user/actionCreators';
 
 export const Login = () => {
 	const navigate = useNavigate();
@@ -41,7 +41,7 @@ export const Login = () => {
 			window.localStorage.setItem(USER_NAME_KEY_NAME, result.user.name);
 			window.localStorage.setItem(USER_EMAIL_KEY_NAME, result.user.email);
 			dispatch(
-				setUserStore(true, result.user.name, result.user.email, result.result)
+				userSet(true, result.user.name, result.user.email, result.result)
 			);
 			navigate(COURSES_PATH);
 		}

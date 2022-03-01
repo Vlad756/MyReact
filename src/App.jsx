@@ -1,5 +1,5 @@
 import { Courses } from './components/Courses/Courses';
-import { CreateCourse } from './components/CreateCourse/CreateCourse';
+import { CourseForm } from './components/CourseForm/CourseForm';
 import { Header } from './components/Header/Header';
 import { Registration } from './components/Registration/Registration';
 import {
@@ -8,6 +8,7 @@ import {
 	REGISTRATION_PATH,
 	COURSES_ADD_PATH,
 	DEFAULT_PATH,
+	COURSES_UPDATE_PATH,
 } from './constants';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
@@ -15,6 +16,7 @@ import { Login } from './components/Login/Login';
 import { CourseInfo } from './components/CourseInfo/CourseInfo';
 import { useSelector } from 'react-redux';
 import { selectUser } from './store/selectors';
+import { PrivateRouter } from './components/PrivateRouter/PrivateRouter';
 
 const App = () => {
 	const { isAuth } = useSelector(selectUser);
@@ -35,7 +37,20 @@ const App = () => {
 						}
 					/>
 					<Route path={COURSES_PATH} element={<Courses />} />
-					<Route path={COURSES_ADD_PATH} element={<CreateCourse />} />
+					<Route exact path={COURSES_ADD_PATH} element={<PrivateRouter />}>
+						<Route exact path={COURSES_ADD_PATH} element={<CourseForm />} />
+					</Route>
+					<Route
+						exact
+						path={`${COURSES_UPDATE_PATH}/:id`}
+						element={<PrivateRouter />}
+					>
+						<Route
+							exact
+							path={`${COURSES_UPDATE_PATH}/:id`}
+							element={<CourseForm />}
+						/>
+					</Route>
 					<Route path={LOGIN_PATH} element={<Login />} />
 					<Route path={REGISTRATION_PATH} element={<Registration />} />
 					<Route path={`${COURSES_PATH}/:id`} element={<CourseInfo />} />

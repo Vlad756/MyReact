@@ -16,6 +16,7 @@ import {
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { userSet } from '../../store/user/actionCreators';
+import { fetchCurrentUserRole } from '../../store/user/thunk';
 
 export const Login = () => {
 	const navigate = useNavigate();
@@ -43,6 +44,7 @@ export const Login = () => {
 			dispatch(
 				userSet(true, result.user.name, result.user.email, result.result)
 			);
+			dispatch(fetchCurrentUserRole);
 			navigate(COURSES_PATH);
 		}
 	};

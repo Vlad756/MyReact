@@ -60,6 +60,7 @@ export const SEARCH_BUTTON_TEXT = 'Search';
 export const SEARCH_INPUT_PLACEHOLDER = 'Search...';
 export const SHOW_COURSE_BUTTON_TEXT = 'Show course';
 export const CREATE_COURSE_BUTTON_TEXT = 'Create Course';
+export const UPDATE_COURSE_BUTTON_TEXT = 'Update Course';
 export const COURSE_NAME_INPUT_TEXT = 'Course Name';
 export const DESCRIPTION_INPUT_PLACEHOLDER = 'Description';
 export const AUTOR_NAME_INPUT_PLACEHOLDER = 'Author name';
@@ -77,6 +78,7 @@ export const COURSES_PATH = '/courses';
 export const REGISTRATION_PATH = '/registration';
 export const LOGIN_PATH = '/login';
 export const COURSES_ADD_PATH = '/courses/add';
+export const COURSES_UPDATE_PATH = '/courses/update';
 
 export const USER_EMAIL_KEY_NAME = 'email';
 export const USER_TOKEN_KEY_NAME = 'token';
@@ -89,3 +91,8 @@ export const ENTER_NAME_PLACEHOLDER = 'Enter name';
 export const LOGOUT_BUTTON_TEXT = 'Logout';
 export const COURSES_ALL_PATH = '/courses/all';
 export const AUTHORS_ALL_PATH = '/authors/all';
+export const AUTHORS_ADD_PATH = '/authors/add';
+export const LOGOUT_PATH = '/logout';
+export const USER_ME_PATH = '/users/me';
+
+export const ADMIN_ROLE_NAME = 'admin';

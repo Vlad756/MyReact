@@ -14,20 +14,23 @@ import {
 	DELETE_AUTHOR_BUTTON_TEXT,
 	COURSES_PATH,
 	LOGIN_PATH,
+	UPDATE_COURSE_BUTTON_TEXT,
 } from '../../constants';
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { authorAdded, setAuthors } from '../../store/authors/actionCreators';
-import { courseAdded, setCourses } from '../../store/courses/actionCreators';
+import { setAuthors } from '../../store/authors/actionCreators';
+import { setCourses } from '../../store/courses/actionCreators';
 import {
 	selectAuthors,
 	selectCourses,
 	selectUser,
 } from '../../store/selectors';
 import { fetchAuthors, fetchCourses } from '../../services';
+import { uploadAuthor } from '../../store/authors/thunk';
+import { editCourse, uploadCourse } from '../../store/courses/thunk';
 
-export const CreateCourse = () => {
+export const CourseForm = () => {
 	const { isAuth } = useSelector(selectUser);
 	const authors = useSelector(selectAuthors);
 	const courses = useSelector(selectCourses);
@@ -41,10 +44,11 @@ export const CreateCourse = () => {
 	const availableAuthors = authors.filter(
 		(author) => !courseAuthors.includes(author)
 	);
+	const { id } = useParams();
 
 	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
-		dispatch(authorAdded(newAuthor));
+		dispatch(uploadAuthor(newAuthor));
 	};
 
 	const handleCreateCourse = () => {
@@ -52,15 +56,30 @@ export const CreateCourse = () => {
 			window.alert('Please, fill in all fields');
 			return;
 		}
-		const newCourse = {
-			id: uuidv4(),
-			title: title,
-			description: description,
-			creationDate: new Date().toDateString(),
-			duration: duration,
-			authors: courseAuthors.map((x) => x.id),
-		};
-		dispatch(courseAdded(newCourse));
+		dispatch(
+			uploadCourse({
+				title: title,
+				description: description,
+				duration: new Number(duration),
+				authors: courseAuthors.map((x) => x.id),
+			})
+		);
+		navigate(COURSES_PATH);
+	};
+
+	const handleUpdateCourse = () => {
+		if (isFormValid()) {
+			window.alert('Please, fill in all fields');
+			return;
+		}
+		dispatch(
+			editCourse(id.substring(1, id.length), {
+				title: title,
+				description: description,
+				duration: new Number(duration),
+				authors: courseAuthors.map((x) => x.id),
+			})
+		);
 		navigate(COURSES_PATH);
 	};
 
@@ -105,6 +124,16 @@ export const CreateCourse = () => {
 		}
 	}, [isAuth, dispatch, navigate]);
 
+	useEffect(() => {
+		if (id) {
+			const course = courses?.find((c) => c.id === id.substring(1, id.length));
+			setDescription(course?.description);
+			setDuration(course?.duration);
+			setTitle(course?.title);
+			setCourseAuthors(authors?.filter((a) => course?.authors.includes(a.id)));
+		}
+	}, [authors, id, courses]);
+
 	return (
 		<Form className='createCourseForm'>
 			<p>Title</p>
@@ -121,8 +150,16 @@ export const CreateCourse = () => {
 				</Grid.Column>
 				<Grid.Column width={3} floated='right'>
 					<Button
-						content={CREATE_COURSE_BUTTON_TEXT}
-						onClick={(event) => handleCreateCourse(event)}
+						content={
+							id === undefined
+								? CREATE_COURSE_BUTTON_TEXT
+								: UPDATE_COURSE_BUTTON_TEXT
+						}
+						onClick={(event) =>
+							id === undefined
+								? handleCreateCourse(event)
+								: handleUpdateCourse(event)
+						}
 					/>
 				</Grid.Column>
 			</Grid>

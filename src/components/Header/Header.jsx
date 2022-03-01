@@ -11,18 +11,18 @@ import {
 } from '../../constants';
 import { Logo } from './components/Logo/Logo';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLogout } from '../../store/user/actionCreators';
 import { selectUser } from '../../store/selectors';
+import { logout } from '../../store/user/thunk';
 
 export const Header = () => {
 	const dispatch = useDispatch();
 	const { isAuth, name } = useSelector(selectUser);
 
 	const handleButtonClick = () => {
-		dispatch(userLogout());
 		window.localStorage.removeItem(USER_NAME_KEY_NAME);
 		window.localStorage.removeItem(USER_EMAIL_KEY_NAME);
 		window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
+		dispatch(logout);
 	};
 
 	return (

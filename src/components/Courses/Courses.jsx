@@ -6,6 +6,7 @@ import { Button } from '../../common/Button/Button';
 import { SearchBar } from './components/SearchBar/SearchBar';
 import {
 	ADD_NEW_COURSE_BUTTON_TEXT,
+	ADMIN_ROLE_NAME,
 	COURSES_ADD_PATH,
 	LOGIN_PATH,
 } from '../../constants';
@@ -19,9 +20,10 @@ import {
 import { fetchAuthors, fetchCourses } from '../../services';
 import { setCourses } from '../../store/courses/actionCreators';
 import { setAuthors } from '../../store/authors/actionCreators';
+import { fetchCurrentUserRole } from '../../store/user/thunk';
 
 export const Courses = () => {
-	const { isAuth } = useSelector(selectUser);
+	const { isAuth, role } = useSelector(selectUser);
 	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
 	const dispatch = useDispatch();
@@ -77,8 +79,11 @@ export const Courses = () => {
 					}
 				});
 			}
+			if (role === '') {
+				dispatch(fetchCurrentUserRole);
+			}
 		}
-	}, [isAuth, dispatch, navigate]);
+	}, [isAuth, dispatch, navigate, role]);
 
 	return (
 		<>
@@ -90,17 +95,21 @@ export const Courses = () => {
 						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>
-				<Grid.Column
-					width={3}
-					floated='right'
-					className='addCourseButtonColumn'
-				>
-					<Button
-						content={ADD_NEW_COURSE_BUTTON_TEXT}
-						as={NavLink}
-						to={COURSES_ADD_PATH}
-					/>
-				</Grid.Column>
+				{role === ADMIN_ROLE_NAME ? (
+					<Grid.Column
+						width={3}
+						floated='right'
+						className='addCourseButtonColumn'
+					>
+						<Button
+							content={ADD_NEW_COURSE_BUTTON_TEXT}
+							as={NavLink}
+							to={COURSES_ADD_PATH}
+						/>
+					</Grid.Column>
+				) : (
+					<></>
+				)}
 			</Grid>
 			{filteredCourses.map((x, i) => (
 				<CourseCard

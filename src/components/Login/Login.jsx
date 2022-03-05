@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Header } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
@@ -9,45 +9,32 @@ import {
 	ENTER_PASSWORD_PLACEHOLDER,
 	LOGIN_BUTTON_TEXT,
 	REGISTRATION_PATH,
-	USER_EMAIL_KEY_NAME,
-	USER_NAME_KEY_NAME,
-	USER_TOKEN_KEY_NAME,
 } from '../../constants';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { userSet } from '../../store/user/actionCreators';
-import { fetchCurrentUserRole } from '../../store/user/thunk';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginThunk } from '../../store/user/thunk';
+import { selectUser } from '../../store/selectors';
 
 export const Login = () => {
 	const navigate = useNavigate();
-	const [emailInput, setEmailInput] = useState();
-	const [passwordInput, setPasswordInput] = useState();
+	const [emailInput, setEmailInput] = useState('');
+	const [passwordInput, setPasswordInput] = useState('');
 	const dispatch = useDispatch();
+	const { token } = useSelector(selectUser);
 
-	const handleFormSubmit = async () => {
+	const handleFormSubmit = () => {
 		const user = {
 			email: emailInput,
 			password: passwordInput,
 		};
-		const response = await fetch('http://localhost:3000/login', {
-			method: 'POST',
-			body: JSON.stringify(user),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-		const result = await response.json();
-		if (result.successful === true) {
-			window.localStorage.setItem(USER_TOKEN_KEY_NAME, result.result);
-			window.localStorage.setItem(USER_NAME_KEY_NAME, result.user.name);
-			window.localStorage.setItem(USER_EMAIL_KEY_NAME, result.user.email);
-			dispatch(
-				userSet(true, result.user.name, result.user.email, result.result)
-			);
-			dispatch(fetchCurrentUserRole);
+		dispatch(loginThunk(user));
+	};
+
+	useEffect(() => {
+		if (token) {
 			navigate(COURSES_PATH);
 		}
-	};
+	}, [token]);
 
 	return (
 		<Form className='loginForm' autoComplete='off' onSubmit={handleFormSubmit}>

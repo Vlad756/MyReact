@@ -37,20 +37,22 @@ const App = () => {
 						}
 					/>
 					<Route path={COURSES_PATH} element={<Courses />} />
-					<Route exact path={COURSES_ADD_PATH} element={<PrivateRouter />}>
-						<Route exact path={COURSES_ADD_PATH} element={<CourseForm />} />
-					</Route>
 					<Route
-						exact
+						path={COURSES_ADD_PATH}
+						element={
+							<PrivateRouter>
+								<CourseForm />
+							</PrivateRouter>
+						}
+					/>
+					<Route
 						path={`${COURSES_UPDATE_PATH}/:id`}
-						element={<PrivateRouter />}
-					>
-						<Route
-							exact
-							path={`${COURSES_UPDATE_PATH}/:id`}
-							element={<CourseForm />}
-						/>
-					</Route>
+						element={
+							<PrivateRouter>
+								<CourseForm />
+							</PrivateRouter>
+						}
+					/>
 					<Route path={LOGIN_PATH} element={<Login />} />
 					<Route path={REGISTRATION_PATH} element={<Registration />} />
 					<Route path={`${COURSES_PATH}/:id`} element={<CourseInfo />} />

@@ -15,10 +15,7 @@ export const setCourses = (courses) => ({
 	payload: courses,
 });
 
-export const courseEdited = (id, course) => ({
+export const courseEdited = (course) => ({
 	type: actions.COURSES_EDITED,
-	payload: {
-		id: id,
-		course: course,
-	},
+	payload: course,
 });

@@ -8,7 +8,6 @@ import {
 	LOGOUT_PATH,
 	REGISTRATION_PATH,
 	USER_ME_PATH,
-	USER_TOKEN_KEY_NAME,
 } from './constants';
 
 const BASE_URL = 'http://localhost:3000';
@@ -24,66 +23,68 @@ const sendRequest = async (url, body) => {
 	}
 };
 
-const postRequest = async (endpoint, body) => {
+const postRequest = async (endpoint, body, token) => {
 	return await sendRequest(`${BASE_URL}${endpoint}`, {
 		method: 'POST',
 		body: JSON.stringify(body),
 		headers: {
-			Authorization: window.localStorage.getItem(USER_TOKEN_KEY_NAME),
+			Authorization: token,
 			'Content-Type': 'application/json',
 		},
 	});
 };
 
-const getRequest = async (endpoint) => {
+const getRequest = async (endpoint, token) => {
 	return await sendRequest(`${BASE_URL}${endpoint}`, {
 		method: 'GET',
 		headers: {
-			Authorization: window.localStorage.getItem(USER_TOKEN_KEY_NAME),
+			Authorization: token,
 		},
 	});
 };
 
-const putRequest = async (endpoint, body) => {
+const putRequest = async (endpoint, body, token) => {
 	return await sendRequest(`${BASE_URL}${endpoint}`, {
 		method: 'PUT',
 		body: JSON.stringify(body),
 		headers: {
+			Authorization: token,
 			'Content-Type': 'application/json',
-			Authorization: window.localStorage.getItem(USER_TOKEN_KEY_NAME),
 		},
 	});
 };
 
-const deleteRequest = async (endpoint) => {
+const deleteRequest = async (endpoint, token) => {
 	return await sendRequest(`${BASE_URL}${endpoint}`, {
 		method: 'DELETE',
 		headers: {
-			Authorization: window.localStorage.getItem(USER_TOKEN_KEY_NAME),
+			Authorization: token,
 		},
 	});
 };
 
-export const loginRequest = (reqBody) => postRequest(LOGIN_PATH, reqBody);
+export const loginRequest = (reqBody, token) =>
+	postRequest(LOGIN_PATH, reqBody, token);
 
-export const registrationRequest = (reqBody) =>
-	postRequest(REGISTRATION_PATH, reqBody);
+export const registrationRequest = (reqBody, token) =>
+	postRequest(REGISTRATION_PATH, reqBody, token);
 
-export const fetchCourses = () => getRequest(COURSES_ALL_PATH);
+export const fetchCourses = (token) => getRequest(COURSES_ALL_PATH, token);
 
-export const fetchAuthors = () => getRequest(AUTHORS_ALL_PATH);
+export const fetchAuthors = (token) => getRequest(AUTHORS_ALL_PATH, token);
 
-export const addCourse = async (reqBody) =>
-	await postRequest(COURSES_ADD_PATH, reqBody);
+export const addCourse = (reqBody, token) =>
+	postRequest(COURSES_ADD_PATH, reqBody, token);
 
-export const updateCourse = async (id, reqBody) =>
-	await putRequest(`${COURSES_PATH}/${id}`, reqBody);
+export const updateCourse = (id, reqBody, token) =>
+	putRequest(`${COURSES_PATH}/${id}`, reqBody, token);
 
-export const addAuthor = (reqBody) => postRequest(AUTHORS_ADD_PATH, reqBody);
+export const addAuthor = (reqBody, token) =>
+	postRequest(AUTHORS_ADD_PATH, reqBody, token);
 
-export const deleteCourse = async (id) =>
-	await deleteRequest(`${COURSES_PATH}/${id}`);
+export const deleteCourse = async (id, token) =>
+	deleteRequest(`${COURSES_PATH}/${id}`, token);
 
-export const logoutRequest = async () => await deleteRequest(LOGOUT_PATH);
+export const logoutRequest = (token) => deleteRequest(LOGOUT_PATH, token);
 
-export const getCurrentUser = async () => await getRequest(USER_ME_PATH);
+export const getCurrentUser = (token) => getRequest(USER_ME_PATH, token);

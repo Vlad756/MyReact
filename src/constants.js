@@ -95,4 +95,7 @@ export const AUTHORS_ADD_PATH = '/authors/add';
 export const LOGOUT_PATH = '/logout';
 export const USER_ME_PATH = '/users/me';
 
-export const ADMIN_ROLE_NAME = 'admin';
+export const UserRole = {
+	USER: 'user',
+	ADMIN: 'admin',
+};

@@ -1,9 +1,24 @@
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet } from 'react-router-dom';
-import { ADMIN_ROLE_NAME, COURSES_PATH } from '../../constants';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { COURSES_PATH, UserRole } from '../../constants';
 import { selectUser } from '../../store/selectors';
+import { fetchUserThunk } from '../../store/user/thunk';
 
-export const PrivateRouter = () => {
+export const PrivateRouter = ({ children }) => {
 	const { role } = useSelector(selectUser);
-	return role === ADMIN_ROLE_NAME ? <Outlet /> : <Navigate to={COURSES_PATH} />;
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (role === '') {
+			dispatch(fetchUserThunk());
+		}
+	}, [role]);
+
+	return (
+		<>
+			{role === UserRole.ADMIN && children}
+			{role === UserRole.USER && <Navigate to={COURSES_PATH} />}
+		</>
+	);
 };

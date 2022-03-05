@@ -6,9 +6,9 @@ import { Button } from '../../common/Button/Button';
 import { SearchBar } from './components/SearchBar/SearchBar';
 import {
 	ADD_NEW_COURSE_BUTTON_TEXT,
-	ADMIN_ROLE_NAME,
 	COURSES_ADD_PATH,
 	LOGIN_PATH,
+	UserRole,
 } from '../../constants';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,10 +17,9 @@ import {
 	selectCourses,
 	selectUser,
 } from '../../store/selectors';
-import { fetchAuthors, fetchCourses } from '../../services';
-import { setCourses } from '../../store/courses/actionCreators';
-import { setAuthors } from '../../store/authors/actionCreators';
-import { fetchCurrentUserRole } from '../../store/user/thunk';
+import { fetchUserThunk } from '../../store/user/thunk';
+import { fetchCoursesThunk } from '../../store/courses/thunk';
+import { fetchAuthorsThunk } from '../../store/authors/thunk';
 
 export const Courses = () => {
 	const { isAuth, role } = useSelector(selectUser);
@@ -62,26 +61,14 @@ export const Courses = () => {
 	const filteredCourses = filterCourses(courses);
 
 	useEffect(() => {
-		if (!isAuth) {
-			navigate(LOGIN_PATH);
-		} else {
-			if (!courses.length) {
-				fetchCourses().then((data) => {
-					if (data && data.successful) {
-						dispatch(setCourses(data.result));
-					}
-				});
-			}
-			if (!authors.length) {
-				fetchAuthors().then((data) => {
-					if (data && data.successful) {
-						dispatch(setAuthors(data.result));
-					}
-				});
-			}
+		if (isAuth) {
+			dispatch(fetchAuthorsThunk());
+			dispatch(fetchCoursesThunk());
 			if (role === '') {
-				dispatch(fetchCurrentUserRole);
+				dispatch(fetchUserThunk());
 			}
+		} else {
+			navigate(LOGIN_PATH);
 		}
 	}, [isAuth, dispatch, navigate, role]);
 
@@ -95,7 +82,7 @@ export const Courses = () => {
 						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>
-				{role === ADMIN_ROLE_NAME ? (
+				{role === UserRole.ADMIN ? (
 					<Grid.Column
 						width={3}
 						floated='right'

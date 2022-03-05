@@ -9,9 +9,8 @@ import {
 	selectCourses,
 	selectUser,
 } from '../../store/selectors';
-import { fetchAuthors, fetchCourses } from '../../services';
-import { setCourses } from '../../store/courses/actionCreators';
-import { setAuthors } from '../../store/authors/actionCreators';
+import { fetchAuthorsThunk } from '../../store/authors/thunk';
+import { fetchCoursesThunk } from '../../store/courses/thunk';
 
 export const CourseInfo = () => {
 	const { isAuth } = useSelector(selectUser);
@@ -32,23 +31,11 @@ export const CourseInfo = () => {
 	};
 
 	useEffect(() => {
-		if (!isAuth) {
-			navigate(LOGIN_PATH);
+		if (isAuth) {
+			dispatch(fetchAuthorsThunk());
+			dispatch(fetchCoursesThunk());
 		} else {
-			if (!courses.length) {
-				fetchCourses().then((data) => {
-					if (data && data.successful) {
-						dispatch(setCourses(data.result));
-					}
-				});
-			}
-			if (!authors.length) {
-				fetchAuthors().then((data) => {
-					if (data && data.successful) {
-						dispatch(setAuthors(data.result));
-					}
-				});
-			}
+			navigate(LOGIN_PATH);
 		}
 	}, [isAuth, dispatch, navigate]);
 

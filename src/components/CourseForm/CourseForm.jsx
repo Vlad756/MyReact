@@ -19,16 +19,20 @@ import {
 import { convertMinutesToHoursMinutes } from '../../helpers/MinutesToHoursMinutesConverter';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthors } from '../../store/authors/actionCreators';
-import { setCourses } from '../../store/courses/actionCreators';
 import {
 	selectAuthors,
 	selectCourses,
 	selectUser,
 } from '../../store/selectors';
-import { fetchAuthors, fetchCourses } from '../../services';
-import { uploadAuthor } from '../../store/authors/thunk';
-import { editCourse, uploadCourse } from '../../store/courses/thunk';
+import {
+	fetchAuthorsThunk,
+	uploadAuthorThunk,
+} from '../../store/authors/thunk';
+import {
+	fetchCoursesThunk,
+	updateCourseThunk,
+	uploadCourseThunk,
+} from '../../store/courses/thunk';
 
 export const CourseForm = () => {
 	const { isAuth } = useSelector(selectUser);
@@ -48,7 +52,7 @@ export const CourseForm = () => {
 
 	const handleCreateAuthor = () => {
 		const newAuthor = { id: uuidv4(), name: authorInput };
-		dispatch(uploadAuthor(newAuthor));
+		dispatch(uploadAuthorThunk(newAuthor));
 	};
 
 	const handleCreateCourse = () => {
@@ -57,10 +61,10 @@ export const CourseForm = () => {
 			return;
 		}
 		dispatch(
-			uploadCourse({
+			uploadCourseThunk({
 				title: title,
 				description: description,
-				duration: new Number(duration),
+				duration: Number(duration),
 				authors: courseAuthors.map((x) => x.id),
 			})
 		);
@@ -73,10 +77,10 @@ export const CourseForm = () => {
 			return;
 		}
 		dispatch(
-			editCourse(id.substring(1, id.length), {
+			updateCourseThunk(id, {
 				title: title,
 				description: description,
-				duration: new Number(duration),
+				duration: Number(duration),
 				authors: courseAuthors.map((x) => x.id),
 			})
 		);
@@ -104,33 +108,23 @@ export const CourseForm = () => {
 	};
 
 	useEffect(() => {
-		if (!isAuth) {
-			navigate(LOGIN_PATH);
+		if (isAuth) {
+			dispatch(fetchAuthorsThunk());
+			dispatch(fetchCoursesThunk());
 		} else {
-			if (!courses.length) {
-				fetchCourses().then((data) => {
-					if (data && data.successful) {
-						dispatch(setCourses(data.result));
-					}
-				});
-			}
-			if (!authors.length) {
-				fetchAuthors().then((data) => {
-					if (data && data.successful) {
-						dispatch(setAuthors(data.result));
-					}
-				});
-			}
+			navigate(LOGIN_PATH);
 		}
 	}, [isAuth, dispatch, navigate]);
 
 	useEffect(() => {
 		if (id) {
-			const course = courses?.find((c) => c.id === id.substring(1, id.length));
-			setDescription(course?.description);
-			setDuration(course?.duration);
-			setTitle(course?.title);
-			setCourseAuthors(authors?.filter((a) => course?.authors.includes(a.id)));
+			const course = courses?.find((c) => c.id === id);
+			if (course) {
+				setDescription(course.description);
+				setDuration(course.duration);
+				setTitle(course.title);
+				setCourseAuthors(authors?.filter((a) => course.authors.includes(a.id)));
+			}
 		}
 	}, [authors, id, courses]);
 
@@ -150,15 +144,9 @@ export const CourseForm = () => {
 				</Grid.Column>
 				<Grid.Column width={3} floated='right'>
 					<Button
-						content={
-							id === undefined
-								? CREATE_COURSE_BUTTON_TEXT
-								: UPDATE_COURSE_BUTTON_TEXT
-						}
+						content={id ? UPDATE_COURSE_BUTTON_TEXT : CREATE_COURSE_BUTTON_TEXT}
 						onClick={(event) =>
-							id === undefined
-								? handleCreateCourse(event)
-								: handleUpdateCourse(event)
+							id ? handleUpdateCourse(event) : handleCreateCourse(event)
 						}
 					/>
 				</Grid.Column>

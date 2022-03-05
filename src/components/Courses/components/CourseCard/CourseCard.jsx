@@ -2,10 +2,10 @@ import React from 'react';
 import { Divider, Grid, Segment } from 'semantic-ui-react';
 import { Button } from '../../../../common/Button/Button';
 import {
-	ADMIN_ROLE_NAME,
 	COURSES_PATH,
 	COURSES_UPDATE_PATH,
 	SHOW_COURSE_BUTTON_TEXT,
+	UserRole,
 } from '../../../../constants';
 import { CourseCardInfo } from './CourseCardInfo';
 import {
@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../../../../store/selectors';
-import { removeCourse } from '../../../../store/courses/thunk';
+import { deleteCourseThunk } from '../../../../store/courses/thunk';
 
 export const CourseCard = ({
 	id,
@@ -38,7 +38,7 @@ export const CourseCard = ({
 	};
 
 	const handleDeleteCourse = () => {
-		dispatch(removeCourse(id));
+		dispatch(deleteCourseThunk(id));
 	};
 
 	return (
@@ -60,12 +60,12 @@ export const CourseCard = ({
 						as={NavLink}
 						to={`${COURSES_PATH}/${id}`}
 					/>
-					{role === ADMIN_ROLE_NAME ? (
+					{role === UserRole.ADMIN ? (
 						<>
 							<Button
 								icon='edit'
 								as={NavLink}
-								to={`${COURSES_UPDATE_PATH}/:${id}`}
+								to={`${COURSES_UPDATE_PATH}/${id}`}
 							/>
 							<Button icon='trash' onClick={handleDeleteCourse} />
 						</>

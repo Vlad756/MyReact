@@ -11,6 +11,7 @@ export const userSet = (isAuth, name, email, token) => ({
 		name: name,
 		email: email,
 		token: token,
+		role: '',
 	},
 });
 

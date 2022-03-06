@@ -82,7 +82,7 @@ export const updateCourse = (id, reqBody, token) =>
 export const addAuthor = (reqBody, token) =>
 	postRequest(AUTHORS_ADD_PATH, reqBody, token);
 
-export const deleteCourse = async (id, token) =>
+export const deleteCourse = (id, token) =>
 	deleteRequest(`${COURSES_PATH}/${id}`, token);
 
 export const logoutRequest = (token) => deleteRequest(LOGOUT_PATH, token);

@@ -1,7 +1,12 @@
 import React from 'react';
 import { Divider, Grid, Segment } from 'semantic-ui-react';
 import { Button } from '../../../../common/Button/Button';
-import { COURSES_PATH, SHOW_COURSE_BUTTON_TEXT } from '../../../../constants';
+import {
+	COURSES_PATH,
+	COURSES_UPDATE_PATH,
+	SHOW_COURSE_BUTTON_TEXT,
+	UserRole,
+} from '../../../../constants';
 import { CourseCardInfo } from './CourseCardInfo';
 import {
 	MAX_AUTHORS_LENGTH,
@@ -11,8 +16,9 @@ import {
 import { convertMinutesToHoursMinutes } from '../../../../helpers/MinutesToHoursMinutesConverter';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { courseRemoved } from '../../../../store/courses/actionCreators';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../../../store/selectors';
+import { deleteCourseThunk } from '../../../../store/courses/thunk';
 
 export const CourseCard = ({
 	id,
@@ -23,6 +29,7 @@ export const CourseCard = ({
 	authors,
 }) => {
 	const dispatch = useDispatch();
+	const { role } = useSelector(selectUser);
 
 	const truncate = (str) => {
 		return str.length > MAX_AUTHORS_LENGTH
@@ -31,7 +38,7 @@ export const CourseCard = ({
 	};
 
 	const handleDeleteCourse = () => {
-		dispatch(courseRemoved(id));
+		dispatch(deleteCourseThunk(id));
 	};
 
 	return (
@@ -53,8 +60,18 @@ export const CourseCard = ({
 						as={NavLink}
 						to={`${COURSES_PATH}/${id}`}
 					/>
-					<Button icon='edit' />
-					<Button icon='trash' onClick={handleDeleteCourse} />
+					{role === UserRole.ADMIN ? (
+						<>
+							<Button
+								icon='edit'
+								as={NavLink}
+								to={`${COURSES_UPDATE_PATH}/${id}`}
+							/>
+							<Button icon='trash' onClick={handleDeleteCourse} />
+						</>
+					) : (
+						<></>
+					)}
 				</Grid.Column>
 			</Grid>
 

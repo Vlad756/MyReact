@@ -14,3 +14,8 @@ export const setCourses = (courses) => ({
 	type: actions.COURSES_SET_ALL,
 	payload: courses,
 });
+
+export const courseEdited = (course) => ({
+	type: actions.COURSES_EDITED,
+	payload: course,
+});

@@ -11,5 +11,11 @@ export const userSet = (isAuth, name, email, token) => ({
 		name: name,
 		email: email,
 		token: token,
+		role: '',
 	},
+});
+
+export const setCurrentUserRole = (role) => ({
+	type: actions.USER_ROLE_SET,
+	payload: role,
 });

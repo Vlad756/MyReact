@@ -2,27 +2,18 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 import { Button } from '../../common/Button/Button';
-import {
-	LOGIN_PATH,
-	LOGOUT_BUTTON_TEXT,
-	USER_EMAIL_KEY_NAME,
-	USER_NAME_KEY_NAME,
-	USER_TOKEN_KEY_NAME,
-} from '../../constants';
+import { LOGIN_PATH, LOGOUT_BUTTON_TEXT } from '../../constants';
 import { Logo } from './components/Logo/Logo';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLogout } from '../../store/user/actionCreators';
 import { selectUser } from '../../store/selectors';
+import { logoutThunk } from '../../store/user/thunk';
 
 export const Header = () => {
 	const dispatch = useDispatch();
 	const { isAuth, name } = useSelector(selectUser);
 
 	const handleButtonClick = () => {
-		dispatch(userLogout());
-		window.localStorage.removeItem(USER_NAME_KEY_NAME);
-		window.localStorage.removeItem(USER_EMAIL_KEY_NAME);
-		window.localStorage.removeItem(USER_TOKEN_KEY_NAME);
+		dispatch(logoutThunk());
 	};
 
 	return (

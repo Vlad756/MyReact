@@ -8,6 +8,7 @@ import {
 	ADD_NEW_COURSE_BUTTON_TEXT,
 	COURSES_ADD_PATH,
 	LOGIN_PATH,
+	UserRole,
 } from '../../constants';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,12 +17,12 @@ import {
 	selectCourses,
 	selectUser,
 } from '../../store/selectors';
-import { fetchAuthors, fetchCourses } from '../../services';
-import { setCourses } from '../../store/courses/actionCreators';
-import { setAuthors } from '../../store/authors/actionCreators';
+import { fetchUserThunk } from '../../store/user/thunk';
+import { fetchCoursesThunk } from '../../store/courses/thunk';
+import { fetchAuthorsThunk } from '../../store/authors/thunk';
 
 export const Courses = () => {
-	const { isAuth } = useSelector(selectUser);
+	const { isAuth, role } = useSelector(selectUser);
 	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
 	const dispatch = useDispatch();
@@ -60,25 +61,16 @@ export const Courses = () => {
 	const filteredCourses = filterCourses(courses);
 
 	useEffect(() => {
-		if (!isAuth) {
-			navigate(LOGIN_PATH);
+		if (isAuth) {
+			dispatch(fetchAuthorsThunk());
+			dispatch(fetchCoursesThunk());
+			if (role === '') {
+				dispatch(fetchUserThunk());
+			}
 		} else {
-			if (!courses.length) {
-				fetchCourses().then((data) => {
-					if (data && data.successful) {
-						dispatch(setCourses(data.result));
-					}
-				});
-			}
-			if (!authors.length) {
-				fetchAuthors().then((data) => {
-					if (data && data.successful) {
-						dispatch(setAuthors(data.result));
-					}
-				});
-			}
+			navigate(LOGIN_PATH);
 		}
-	}, [isAuth, dispatch, navigate]);
+	}, [isAuth, dispatch, navigate, role]);
 
 	return (
 		<>
@@ -90,17 +82,21 @@ export const Courses = () => {
 						onSearchButtonClick={handleOnSearchButtonClick}
 					/>
 				</Grid.Column>
-				<Grid.Column
-					width={3}
-					floated='right'
-					className='addCourseButtonColumn'
-				>
-					<Button
-						content={ADD_NEW_COURSE_BUTTON_TEXT}
-						as={NavLink}
-						to={COURSES_ADD_PATH}
-					/>
-				</Grid.Column>
+				{role === UserRole.ADMIN ? (
+					<Grid.Column
+						width={3}
+						floated='right'
+						className='addCourseButtonColumn'
+					>
+						<Button
+							content={ADD_NEW_COURSE_BUTTON_TEXT}
+							as={NavLink}
+							to={COURSES_ADD_PATH}
+						/>
+					</Grid.Column>
+				) : (
+					<></>
+				)}
 			</Grid>
 			{filteredCourses.map((x, i) => (
 				<CourseCard

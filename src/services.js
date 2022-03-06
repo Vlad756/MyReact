@@ -1,8 +1,13 @@
 import {
+	AUTHORS_ADD_PATH,
 	AUTHORS_ALL_PATH,
+	COURSES_ADD_PATH,
 	COURSES_ALL_PATH,
+	COURSES_PATH,
 	LOGIN_PATH,
+	LOGOUT_PATH,
 	REGISTRATION_PATH,
+	USER_ME_PATH,
 } from './constants';
 
 const BASE_URL = 'http://localhost:3000';
@@ -18,27 +23,68 @@ const sendRequest = async (url, body) => {
 	}
 };
 
-const postRequest = (endpoint, body) => {
-	return sendRequest(`${BASE_URL}${endpoint}`, {
+const postRequest = async (endpoint, body, token) => {
+	return await sendRequest(`${BASE_URL}${endpoint}`, {
 		method: 'POST',
 		body: JSON.stringify(body),
 		headers: {
+			Authorization: token,
 			'Content-Type': 'application/json',
 		},
 	});
 };
 
-const getRequest = (endpoint) => {
-	return sendRequest(`${BASE_URL}${endpoint}`, {
+const getRequest = async (endpoint, token) => {
+	return await sendRequest(`${BASE_URL}${endpoint}`, {
 		method: 'GET',
+		headers: {
+			Authorization: token,
+		},
 	});
 };
 
-export const loginRequest = (reqBody) => postRequest(LOGIN_PATH, reqBody);
+const putRequest = async (endpoint, body, token) => {
+	return await sendRequest(`${BASE_URL}${endpoint}`, {
+		method: 'PUT',
+		body: JSON.stringify(body),
+		headers: {
+			Authorization: token,
+			'Content-Type': 'application/json',
+		},
+	});
+};
 
-export const registrationRequest = (reqBody) =>
-	postRequest(REGISTRATION_PATH, reqBody);
+const deleteRequest = async (endpoint, token) => {
+	return await sendRequest(`${BASE_URL}${endpoint}`, {
+		method: 'DELETE',
+		headers: {
+			Authorization: token,
+		},
+	});
+};
 
-export const fetchCourses = () => getRequest(COURSES_ALL_PATH);
+export const loginRequest = (reqBody, token) =>
+	postRequest(LOGIN_PATH, reqBody, token);
 
-export const fetchAuthors = () => getRequest(AUTHORS_ALL_PATH);
+export const registrationRequest = (reqBody, token) =>
+	postRequest(REGISTRATION_PATH, reqBody, token);
+
+export const fetchCourses = (token) => getRequest(COURSES_ALL_PATH, token);
+
+export const fetchAuthors = (token) => getRequest(AUTHORS_ALL_PATH, token);
+
+export const addCourse = (reqBody, token) =>
+	postRequest(COURSES_ADD_PATH, reqBody, token);
+
+export const updateCourse = (id, reqBody, token) =>
+	putRequest(`${COURSES_PATH}/${id}`, reqBody, token);
+
+export const addAuthor = (reqBody, token) =>
+	postRequest(AUTHORS_ADD_PATH, reqBody, token);
+
+export const deleteCourse = (id, token) =>
+	deleteRequest(`${COURSES_PATH}/${id}`, token);
+
+export const logoutRequest = (token) => deleteRequest(LOGOUT_PATH, token);
+
+export const getCurrentUser = (token) => getRequest(USER_ME_PATH, token);

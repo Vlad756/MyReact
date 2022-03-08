@@ -92,6 +92,7 @@ export const Courses = () => {
 							content={ADD_NEW_COURSE_BUTTON_TEXT}
 							as={NavLink}
 							to={COURSES_ADD_PATH}
+							data-testid='addNewCourseButton'
 						/>
 					</Grid.Column>
 				) : (

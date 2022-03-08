@@ -129,7 +129,7 @@ export const CourseForm = () => {
 	}, [authors, id, courses]);
 
 	return (
-		<Form className='createCourseForm'>
+		<Form className='createCourseForm' data-testid='createCourseForm'>
 			<p>Title</p>
 			<Grid>
 				<Grid.Column width={10} floated='left'>

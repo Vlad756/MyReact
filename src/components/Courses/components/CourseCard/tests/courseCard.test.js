@@ -44,7 +44,7 @@ test('Course Card', () => {
 					description={testCourse.description}
 					createDate={testCourse.creationDate}
 					duration={testCourse.duration}
-					authors={[testAuthor.name]}
+					authors={testAuthor.name}
 				/>
 			</BrowserRouter>
 		</Provider>

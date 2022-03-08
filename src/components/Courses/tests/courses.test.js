@@ -71,8 +71,8 @@ test('loads and displays course form', async () => {
 	render(
 		<Provider store={mockedStore}>
 			<BrowserRouter>
-				<Courses />
 				<Routes>
+					<Route path={'/'} element={<Courses />} />
 					<Route
 						path={COURSES_ADD_PATH}
 						element={

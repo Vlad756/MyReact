@@ -28,7 +28,8 @@
     "eject": "react-scripts eject",
     "test:nowatch": "react-scripts test --watchAll=false",
     "prepare": "husky install",
-    "prepublish": "eslint --fix --ext .js --ext .jsx src && npm run test:nowatch",
+    "eslint:fix": "eslint --fix --ext .js --ext .jsx src",
+    "prepublish": "npm run eslint:fix && npm run test:nowatch",
     "postinstall": "semantic-ui-css-patch"
   },
   "eslintConfig": {

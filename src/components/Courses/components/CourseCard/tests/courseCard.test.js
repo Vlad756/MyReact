@@ -16,13 +16,13 @@ const testCourse = {
 
 const testAuthor = {
 	id: '27cc3006-e93a-4748-8ca8-73d06aa93b6d',
-	name: 'Test Name',
+	name: 'TestAuthor',
 };
 
 const mockedState = {
 	user: {
 		isAuth: true,
-		name: 'Test Name',
+		name: 'TestUser',
 	},
 	courses: [testCourse],
 	authors: [testAuthor],
@@ -34,7 +34,7 @@ const mockedStore = {
 	dispatch: jest.fn(),
 };
 
-test('Course Card', () => {
+test('CourseCard should display title', () => {
 	render(
 		<Provider store={mockedStore}>
 			<BrowserRouter>
@@ -50,8 +50,76 @@ test('Course Card', () => {
 		</Provider>
 	);
 	expect(screen.queryByText('Test Title')).toBeInTheDocument();
-	expect(screen.queryByText('Test Name')).toBeInTheDocument();
+});
+
+test('CourseCard should display description', () => {
+	render(
+		<Provider store={mockedStore}>
+			<BrowserRouter>
+				<CourseCard
+					id={testCourse.id}
+					title={testCourse.title}
+					description={testCourse.description}
+					createDate={testCourse.creationDate}
+					duration={testCourse.duration}
+					authors={testAuthor.name}
+				/>
+			</BrowserRouter>
+		</Provider>
+	);
 	expect(screen.queryByText('Test Description')).toBeInTheDocument();
-	expect(screen.queryByText('8/3/2021')).toBeInTheDocument();
+});
+
+test('CourseCard should display duration in the correct format', () => {
+	render(
+		<Provider store={mockedStore}>
+			<BrowserRouter>
+				<CourseCard
+					id={testCourse.id}
+					title={testCourse.title}
+					description={testCourse.description}
+					createDate={testCourse.creationDate}
+					duration={testCourse.duration}
+					authors={testAuthor.name}
+				/>
+			</BrowserRouter>
+		</Provider>
+	);
 	expect(screen.queryByText('2:40')).toBeInTheDocument();
+});
+
+test('CourseCard should display authors list', () => {
+	render(
+		<Provider store={mockedStore}>
+			<BrowserRouter>
+				<CourseCard
+					id={testCourse.id}
+					title={testCourse.title}
+					description={testCourse.description}
+					createDate={testCourse.creationDate}
+					duration={testCourse.duration}
+					authors={testAuthor.name}
+				/>
+			</BrowserRouter>
+		</Provider>
+	);
+	expect(screen.queryByText('TestAuthor')).toBeInTheDocument();
+});
+
+test('CourseCard should display created date in the correct format', () => {
+	render(
+		<Provider store={mockedStore}>
+			<BrowserRouter>
+				<CourseCard
+					id={testCourse.id}
+					title={testCourse.title}
+					description={testCourse.description}
+					createDate={testCourse.creationDate}
+					duration={testCourse.duration}
+					authors={testAuthor.name}
+				/>
+			</BrowserRouter>
+		</Provider>
+	);
+	expect(screen.queryByText('8/3/2021')).toBeInTheDocument();
 });

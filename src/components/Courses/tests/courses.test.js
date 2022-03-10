@@ -67,7 +67,7 @@ const mockedStore = {
 	dispatch: jest.fn(),
 };
 
-test('loads and displays course form', async () => {
+test('CourseForm should be showed after a click on a button "Add new course"', async () => {
 	render(
 		<Provider store={mockedStore}>
 			<BrowserRouter>
@@ -93,7 +93,7 @@ test('loads and displays course form', async () => {
 	expect(screen.getByTestId('createCourseForm')).toBeInTheDocument();
 });
 
-test('courses length is correct', async () => {
+test('Courses should display amount of CourseCard equal length of courses array', async () => {
 	render(
 		<Provider store={mockedStore}>
 			<BrowserRouter>
@@ -107,7 +107,7 @@ test('courses length is correct', async () => {
 	);
 });
 
-test('no courses', async () => {
+test('Courses should display Empty container if courses array length is 0', async () => {
 	mockedState.courses = [];
 	render(
 		<Provider store={mockedStore}>
